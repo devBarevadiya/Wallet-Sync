@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your {{frequency}} Financial Snapshot</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .header {
+        background-color: #af79ed;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .content h2 {
+        font-size: 20px;
+        color: #af79ed;
+      }
+      .content p {
+        margin: 10px 0;
+      }
+      .financial-summary {
+        margin: 20px 0;
+        font-size: 16px;
+      }
+      .financial-summary p {
+        margin: 8px 0;
+      }
+      .categories {
+        margin: 20px 0;
+      }
+      .categories ul {
+        padding-left: 20px;
+      }
+      .categories li {
+        margin: 8px 0;
+      }
+      .reminder {
+        background-color: #faf3ff;
+        padding: 10px;
+        border-left: 5px solid #af79ed;
+        margin: 20px 0;
+        font-size: 16px;
+      }
+      .cta {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .cta a {
+        display: inline-block;
+        background-color: #af79ed;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+        color: #777;
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Your {{frequency}} Financial Snapshot</h1>
+      </div>
+      <div class="content">
+        <h2>Hi {{username}},</h2>
+        <p>Here's how your finances shaped up:</p>
+        <div class="financial-summary">
+          <p>💰 <strong>Income:</strong> ₹{{totalIncome}}</p>
+          <p>💸 <strong>Expenses:</strong> ₹{{totalExpense}}</p>
+          <p>📊 <strong>Transfer:</strong> ₹{{totalTransfer}}</p>
+        </div>
+        <div class="categories">
+          <h3>Your top spending categories:</h3>
+          <ul>
+            {{categories}}
+          </ul>
+        </div>
+        <div class="reminder">
+          🔔 <strong>Reminder:</strong> You have {{recurringBillsCount}}
+          recurring bills coming up next week.
+        </div>
+        <div class="cta">
+          <a href="{{reportLink}}">View Detailed Report</a>
+        </div>
+      </div>
+      <div class="footer">
+        <p>Keep up the great work managing your finances!</p>
+        <p>🌟 WalletSync - Your Money. Your Goals. Simplified. 🌟</p>
+      </div>
+    </div>
+  </body>
+</html>

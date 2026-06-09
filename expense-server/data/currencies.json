@@ -1,0 +1,975 @@
+[{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd27"
+  },
+  "symbol": "€",
+  "currency": "Euro",
+  "code": "EUR",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd29"
+  },
+  "symbol": "¥",
+  "currency": "Japanese Yen",
+  "code": "JPY",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd2a"
+  },
+  "symbol": "₹",
+  "currency": "Indian Rupee",
+  "code": "INR",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd2d"
+  },
+  "symbol": "CHF",
+  "currency": "Swiss Franc",
+  "code": "CHF",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd26"
+  },
+  "symbol": "$",
+  "currency": "US Dollar",
+  "code": "USD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd28"
+  },
+  "symbol": "£",
+  "currency": "British Pound",
+  "code": "GBP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd2c"
+  },
+  "symbol": "A$",
+  "currency": "Australian Dollar",
+  "code": "AUD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd2b"
+  },
+  "symbol": "C$",
+  "currency": "Canadian Dollar",
+  "code": "CAD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd2e"
+  },
+  "symbol": "¥",
+  "currency": "Chinese Yuan",
+  "code": "CNY",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd2f"
+  },
+  "symbol": "kr",
+  "currency": "Swedish Krona",
+  "code": "SEK",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd31"
+  },
+  "symbol": "₩",
+  "currency": "South Korean Won",
+  "code": "KRW",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd30"
+  },
+  "symbol": "NZ$",
+  "currency": "New Zealand Dollar",
+  "code": "NZD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd32"
+  },
+  "symbol": "₽",
+  "currency": "Russian Ruble",
+  "code": "RUB",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd33"
+  },
+  "symbol": "R$",
+  "currency": "Brazilian Real",
+  "code": "BRL",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd34"
+  },
+  "symbol": "R",
+  "currency": "South African Rand",
+  "code": "ZAR",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd35"
+  },
+  "symbol": "₺",
+  "currency": "Turkish Lira",
+  "code": "TRY",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd36"
+  },
+  "symbol": "₫",
+  "currency": "Vietnamese Dong",
+  "code": "VND",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.868Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd37"
+  },
+  "symbol": "฿",
+  "currency": "Thai Baht",
+  "code": "THB",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd38"
+  },
+  "symbol": "₦",
+  "currency": "Nigerian Naira",
+  "code": "NGN",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd39"
+  },
+  "symbol": "S$",
+  "currency": "Singapore Dollar",
+  "code": "SGD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd3e"
+  },
+  "symbol": "zł",
+  "currency": "Polish Zloty",
+  "code": "PLN",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd3b"
+  },
+  "symbol": "₪",
+  "currency": "Israeli Shekel",
+  "code": "ILS",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd3d"
+  },
+  "symbol": "Ft",
+  "currency": "Hungarian Forint",
+  "code": "HUF",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd3a"
+  },
+  "symbol": "AED",
+  "currency": "United Arab Emirates Dirham",
+  "code": "AED",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd40"
+  },
+  "symbol": "₱",
+  "currency": "Philippine Peso",
+  "code": "PHP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd41"
+  },
+  "symbol": "د.إ",
+  "currency": "Jordanian Dinar",
+  "code": "JOD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd42"
+  },
+  "symbol": "د.ج",
+  "currency": "Algerian Dinar",
+  "code": "DZD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd43"
+  },
+  "symbol": "د.ب",
+  "currency": "Bahraini Dinar",
+  "code": "BHD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd44"
+  },
+  "symbol": "د.ك",
+  "currency": "Kuwaiti Dinar",
+  "code": "KWD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd45"
+  },
+  "symbol": "د.م.",
+  "currency": "Moroccan Dirham",
+  "code": "MAD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd46"
+  },
+  "symbol": "د.ت",
+  "currency": "Tunisian Dinar",
+  "code": "TND",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd47"
+  },
+  "symbol": "د.ع",
+  "currency": "Iraqi Dinar",
+  "code": "IQD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd48"
+  },
+  "symbol": "د.س",
+  "currency": "Syrian Pound",
+  "code": "SYP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd49"
+  },
+  "symbol": "£",
+  "currency": "Egyptian Pound",
+  "code": "EGP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd4a"
+  },
+  "symbol": "L",
+  "currency": "Lebanese Pound",
+  "code": "LBP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd4b"
+  },
+  "symbol": "৳",
+  "currency": "Bangladeshi Taka",
+  "code": "BDT",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd4c"
+  },
+  "symbol": "₭",
+  "currency": "Lao Kip",
+  "code": "LAK",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd4d"
+  },
+  "symbol": "MOP$",
+  "currency": "Macanese Pataca",
+  "code": "MOP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd4e"
+  },
+  "symbol": "₨",
+  "currency": "Pakistani Rupee",
+  "code": "PKR",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd4f"
+  },
+  "symbol": "SR",
+  "currency": "Saudi Riyal",
+  "code": "SAR",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd50"
+  },
+  "symbol": "Rs",
+  "currency": "Sri Lankan Rupee",
+  "code": "LKR",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd51"
+  },
+  "symbol": "د.ا",
+  "currency": "Yemeni Rial",
+  "code": "YER",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd52"
+  },
+  "symbol": "Af",
+  "currency": "Afghan Afghani",
+  "code": "AFN",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd53"
+  },
+  "symbol": "S/",
+  "currency": "Peruvian Sol",
+  "code": "PEN",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd54"
+  },
+  "symbol": "Q",
+  "currency": "Guatemalan Quetzal",
+  "code": "GTQ",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd55"
+  },
+  "symbol": "₡",
+  "currency": "Costa Rican Colón",
+  "code": "CRC",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd56"
+  },
+  "symbol": "B/.",
+  "currency": "Panamanian Balboa",
+  "code": "PAB",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd57"
+  },
+  "symbol": "Bs.",
+  "currency": "Venezuelan Bolívar",
+  "code": "VES",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd58"
+  },
+  "symbol": "₵",
+  "currency": "Ghanaian Cedi",
+  "code": "GHS",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd59"
+  },
+  "symbol": "MK",
+  "currency": "Malawian Kwacha",
+  "code": "MWK",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd5b"
+  },
+  "symbol": "USh",
+  "currency": "Ugandan Shilling",
+  "code": "UGX",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd5c"
+  },
+  "symbol": "TSh",
+  "currency": "Tanzanian Shilling",
+  "code": "TZS",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd5d"
+  },
+  "symbol": "KSh",
+  "currency": "Kenyan Shilling",
+  "code": "KES",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd5e"
+  },
+  "symbol": "Fr",
+  "currency": "Central African CFA Franc",
+  "code": "XAF",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd5f"
+  },
+  "symbol": "Fr",
+  "currency": "West African CFA Franc",
+  "code": "XOF",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd60"
+  },
+  "symbol": "Fr",
+  "currency": "Congolese Franc",
+  "code": "CDF",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd62"
+  },
+  "symbol": "R",
+  "currency": "Namibian Dollar",
+  "code": "NAD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd63"
+  },
+  "symbol": "MT",
+  "currency": "Mozambican Metical",
+  "code": "MZN",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd65"
+  },
+  "symbol": "P",
+  "currency": "Botswana Pula",
+  "code": "BWP",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd66"
+  },
+  "symbol": "E",
+  "currency": "Swazi Lilangeni",
+  "code": "SZL",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd67"
+  },
+  "symbol": "ZK",
+  "currency": "Zambian Kwacha",
+  "code": "ZMW",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd68"
+  },
+  "symbol": "Z$",
+  "currency": "Zimbabwean Dollar",
+  "code": "ZWL",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd69"
+  },
+  "symbol": "D",
+  "currency": "Gambian Dalasi",
+  "code": "GMD",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd3c"
+  },
+  "symbol": "Kč",
+  "currency": "Czech Koruna",
+  "code": "CZK",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "666696047ec03bf678a2bd3f"
+  },
+  "symbol": "lei",
+  "currency": "Romanian Leu",
+  "code": "RON",
+  "createdAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-10T05:58:28.869Z"
+  },
+  "__v": 0
+}]

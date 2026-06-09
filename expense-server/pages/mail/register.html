@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to WalletSync</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .header {
+        background-color: #af79ed;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .content h2 {
+        font-size: 20px;
+        color: #af79ed;
+      }
+      .content p {
+        margin: 10px 0;
+      }
+      .features {
+        margin: 20px 0;
+      }
+      .features li {
+        list-style: none;
+        margin: 10px 0;
+      }
+      .features li:before {
+        content: "✅";
+        margin-right: 10px;
+        color: #af79ed;
+      }
+      .quote {
+        margin: 20px 0;
+        font-style: italic;
+        color: #555;
+        text-align: center;
+      }
+      .cta {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .cta a {
+        display: inline-block;
+        background-color: #af79ed;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+        color: #777;
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Welcome to WalletSync!</h1>
+      </div>
+      <div class="content">
+        <h2>Hi {{username}},</h2>
+        <p>
+          Welcome to <strong>WalletSync</strong>, where your journey toward
+          better financial management begins! 🌟
+        </p>
+        <p>
+          We're thrilled to have you on board. Managing your money can sometimes
+          feel overwhelming, but you've taken the first step toward simplifying
+          it. With WalletSync, you're not just tracking numbers—you're gaining
+          control, building habits, and working toward a brighter financial
+          future.
+        </p>
+        <div class="features">
+          <h3>Here's what you can do with WalletSync:</h3>
+          <ul>
+            <li>
+              <strong>Track Your Expenses:</strong> Keep a clear record of every
+              penny spent.
+            </li>
+            <li>
+              <strong>Set Budgets:</strong> Stay on top of your financial goals.
+            </li>
+            <li>
+              <strong>Plan Recurring Bills:</strong> Never miss a due date
+              again.
+            </li>
+            <li>
+              <strong>Collaborate with Groups:</strong> Manage shared expenses
+              seamlessly.
+            </li>
+            <li>
+              <strong>Stay Notified:</strong> Get alerts for important updates,
+              overspending, and more.
+            </li>
+          </ul>
+        </div>
+        <div class="quote">
+          ✨ “A budget is telling your money where to go instead of wondering
+          where it went.”
+          <br />– And WalletSync is here to make this effortless for you.
+        </div>
+        <div class="cta">
+          <p><strong>Get Started Today</strong></p>
+          <a href={{getStartedLink}}>Get Started Now</a>
+        </div>
+      </div>
+      <div class="footer">
+        <p>
+          Thank you for trusting WalletSync to be your financial partner.
+          Together, we'll turn your dreams into achievable goals.
+        </p>
+        <p>🌟 <em>Your Money. Your Goals. Simplified.</em> 🌟</p>
+      </div>
+    </div>
+  </body>
+</html>

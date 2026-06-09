@@ -1,0 +1,8 @@
+/node_modules
+*.txt
+.env
+.env.dev
+expense-manager-frontend/.env
+expense-manager-frontend/.env.*
+expense-server/.env
+expense-server/.env.*

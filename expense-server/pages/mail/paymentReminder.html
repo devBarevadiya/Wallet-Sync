@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friendly Reminder: Your Upcoming Payment</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .email-header {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+      .email-body {
+        margin-top: 20px;
+        font-size: 16px;
+      }
+      .email-body p {
+        margin: 10px 0;
+      }
+      .payment-details {
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .payment-details p {
+        margin: 5px 0;
+      }
+      .cta-buttons {
+        margin-top: 20px;
+      }
+      .cta-buttons a {
+        text-decoration: none;
+        padding: 10px 20px;
+        background-color: #af79ed;
+        color: white;
+        border-radius: 5px;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+      .cta-buttons a:hover {
+        background-color: #9e6fe6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p class="demail-heaer">Hi {{userName}},</p>
+
+      <div class="email-body">
+        <p>This is a friendly reminder for your upcoming payment:</p>
+
+        <div class="payment-details">
+          <p><strong>Payment:</strong> {{paymentName}}</p>
+          <p><strong>Amount:</strong> ₹{{amount}}</p>
+          <p><strong>Due Date:</strong> {{dueDate}}</p>
+        </div>
+
+        <p>Avoid late fees by paying on time!</p>
+
+        <div class="cta-buttons">
+          <a href="{{viewPaymentDetailsLink}}">View Payment Details</a>
+        </div>
+
+        <p style="margin-top: 20px">
+          Stay financially on track with WalletSync!
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

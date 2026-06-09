@@ -1,0 +1,28 @@
+[
+    {
+      "target": {
+        "package_name": "com.walletsync.expensemanager",
+        "sha256_cert_fingerprints": [
+          "49:0D:16:B4:A7:80:71:28:E9:BF:5C:8C:EA:EB:6E:9C:69:D1:A8:E4:09:59:D6:5E:DF:9B:9C:88:B4:14:B3:1D",
+          "B8:59:B1:E7:19:45:39:73:C6:29:51:D9:78:D9:82:99:16:70:DA:13:27:AA:14:39:D4:7B:41:BC:A9:53:3E:F5"
+        ],
+        "namespace": "android_app"
+      },
+      "relation": [
+        "delegate_permission/common.handle_all_urls",
+        "delegate_permission/common.get_login_creds"
+      ]
+    },
+    {
+      "target": {
+        "package_name": "com.walletsync.expensemanager",
+        "sha256_cert_fingerprints": [
+          "07:4B:41:52:A9:20:0A:21:CB:EA:48:12:82:13:F8:2F:08:02:D6:9C:3C:86:8F:1B:58:4B:74:95:D5:C6:93:AD"
+        ],
+        "namespace": "android_app"
+      },
+      "relation": [
+        "delegate_permission/common.handle_all_urls"
+      ]
+    }
+  ]

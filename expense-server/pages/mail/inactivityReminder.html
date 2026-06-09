@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inactivity Reminder Email</title>
+    <style>
+      /* General Email Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f4fc;
+      }
+
+      table {
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      td {
+        padding: 0;
+      }
+
+      .email-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .email-header {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+
+      .email-header h1 {
+        font-size: 24px;
+        color: #af79ed;
+        margin: 0;
+      }
+
+      .email-body {
+        padding: 20px;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333333;
+      }
+
+      .email-body p {
+        margin: 10px 0;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background-color: #af79ed;
+        color: #ffffff;
+        padding: 12px 25px;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: 16px;
+      }
+
+      .cta-button:hover {
+        background-color: #9a68d6;
+      }
+
+      .email-footer {
+        text-align: center;
+        font-size: 12px;
+        color: #888888;
+        padding-top: 20px;
+      }
+
+      .email-footer a {
+        color: #af79ed;
+        text-decoration: none;
+      }
+
+      .email-footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <table role="presentation" class="email-container">
+      <tr>
+        <td class="email-header">
+          <h1>We Miss You!</h1>
+        </td>
+      </tr>
+      <tr>
+        <td class="email-body">
+          <p>Hi {{username}},</p>
+          <p>
+            We noticed you haven't logged any transactions this week. Let's keep
+            your finances on track!
+          </p>
+
+          <a href="{{createTransactionLink}}" class="cta-button"
+            >Create New Transaction</a
+          >
+
+          <p>
+            Remember, keeping your finances organized helps you stay on top of
+            your goals.
+          </p>
+          <p>Stay consistent and let us help you achieve financial success.</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

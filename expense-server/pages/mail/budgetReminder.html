@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Alert Email</title>
+    <style>
+      /* General Email Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      table {
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      td {
+        padding: 0;
+      }
+
+      .email-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      .email-header {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+
+      .email-header h2 {
+        font-size: 24px;
+        color: #333333;
+      }
+
+      .email-body {
+        padding: 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #333333;
+      }
+
+      .email-body p {
+        margin: 10px 0;
+      }
+
+      .email-body .bold {
+        font-weight: bold;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+
+      .cta-button:hover {
+        background-color: #45a049;
+        color: white;
+      }
+
+      /* Footer */
+      .email-footer {
+        text-align: center;
+        font-size: 12px;
+        color: #888888;
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <table role="presentation" class="email-container">
+      <tr>
+        <td class="email-header">
+          <h2>Budget Alert: You're Almost There!</h2>
+        </td>
+      </tr>
+      <tr>
+        <td class="email-body">
+          <p>Hi {{username}},</p>
+          <p>
+            You've exceeded <strong>{{exceedPercentage}}%</strong> of your
+            budget for <strong>{{categoryName}}</strong>:
+          </p>
+
+          <p>
+            💳 <span class="bold">Category Budget:</span> ₹{{budgetLimitAmount}}
+          </p>
+          <p>
+            💸 <span class="bold">Spent So Far:</span> ₹{{budgetSpendAmount}}
+          </p>
+          <p>
+            ⚠️
+            <span class="bold">Remaining Budget:</span>
+            ₹{{budgetRemainingAmount}}
+          </p>
+
+          <p>It's time to adjust your spending or increase your budget.</p>
+
+          <a href="{{updateNowLink}}" class="cta-button" style="color: white"
+            >Update Budget Now</a
+          >
+
+          <p>Let's keep your finances on track!</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

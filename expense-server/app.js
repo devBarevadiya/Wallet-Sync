@@ -48,19 +48,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 
-// Handle Client Server
-// const corsOptions = {
-//   origin: ORIGIN_URL.split(",").map((url) => url.trim()),
-//   optionsSuccessStatus: 200,
-// };
-
 const corsOptions = {
-  origin: [
-    "http://localhost:8600",
-    "http://localhost:5175",
-    "https://walletsync-web.vercel.app",
-    "https://walletsync-app.vercel.app",
-  ],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      origin.includes("localhost") ||
+      origin.includes("127.0.0.1") ||
+      origin.endsWith(".vercel.app") ||
+      origin.includes("walletsync")
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));

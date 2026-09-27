@@ -5,7 +5,13 @@ import morgan from "morgan";
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import { join } from "path";
-import { DATABASE_URL, PORT, SECRET_KEY } from "./config/env.js";
+import {
+  CLIENT_URL,
+  DATABASE_URL,
+  ORIGIN_URL,
+  PORT,
+  SECRET_KEY,
+} from "./config/env.js";
 import UserModel from "./features/user/model.js";
 import { connectDb } from "./helper/connectDb.js";
 import * as route from "./router.js";
@@ -51,15 +57,26 @@ app.use(morgan("dev"));
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (
-      origin.includes("localhost") ||
-      origin.includes("127.0.0.1") ||
-      origin.endsWith(".vercel.app") ||
-      origin.includes("walletsync")
-    ) {
+
+    const allowedOrigins = [CLIENT_URL, ORIGIN_URL]
+      .filter(Boolean)
+      .flatMap((value) => value.split(",").map((item) => item.trim()))
+      .filter(Boolean);
+    let hostname = "";
+    try {
+      hostname = new URL(origin).hostname;
+    } catch (_) {}
+    const isLocalOrigin =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "[::1]";
+    const isVercelPreview = hostname.endsWith(".vercel.app");
+
+    if (isLocalOrigin || isVercelPreview || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    return callback(null, true);
+
+    return callback(new Error("Origin is not allowed by CORS"));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -87,6 +104,15 @@ passport.serializeUser(UserModel.serializeUser());
 passport.deserializeUser(UserModel.deserializeUser());
 
 const BASE_URL = "/api";
+
+// Health check endpoint for Render / keep-alive pings
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "Server is healthy", timestamp: new Date() });
+});
+
+app.get("/", (req, res) => {
+  res.status(200).send("WalletSync Server is running");
+});
 
 // Public Routes
 app.use(BASE_URL + "/aws", route.awsS3Route);

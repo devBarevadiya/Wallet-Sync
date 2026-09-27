@@ -7,7 +7,18 @@ import {
 } from "./thunk";
 import { analyticsTypeEnum, timePeriods } from "../../helpers/enum";
 
-const getChartOrder = JSON.parse(localStorage.getItem("chartOrder"));
+const getStoredChartOrder = () => {
+  try {
+    const stored = JSON.parse(localStorage.getItem("chartOrder"));
+    return Array.isArray(stored) && stored.length ? stored : null;
+  } catch (error) {
+    console.warn("Ignoring invalid saved chart order:", error);
+    localStorage.removeItem("chartOrder");
+    return null;
+  }
+};
+
+const getChartOrder = getStoredChartOrder();
 const defaultChartOrder = [
   {
     enum: analyticsTypeEnum.BALANCE_TREND,
@@ -51,8 +62,10 @@ const defaultChartOrder = [
     title: "budget",
   },
 ];
-const defaultTimePeriod =
-  localStorage.getItem("defaultTimePeriod") || timePeriods.THIS_MONTH;
+const storedTimePeriod = localStorage.getItem("defaultTimePeriod");
+const defaultTimePeriod = Object.values(timePeriods).includes(storedTimePeriod)
+  ? storedTimePeriod
+  : timePeriods.THIS_MONTH;
 
 const initialState = {
   data: {},
@@ -244,7 +257,10 @@ const slice = createSlice({
       state.loading = false;
       state.message = "";
       state.error = null;
-      state.data = action.payload.data;
+      state.data =
+        action.payload?.data && typeof action.payload.data === "object"
+          ? action.payload.data
+          : {};
     });
     builder.addCase(analyticsThunk.rejected, (state, action) => {
       state.loading = false;
@@ -263,10 +279,16 @@ const slice = createSlice({
       state.singleChartLoading = false;
       state.singleChartMessage = "";
       state.singleChartError = null;
-      const enumValue = Object.keys(action.payload.data)[0];
+      const responseData = action.payload?.data;
+      const enumValue =
+        responseData && typeof responseData === "object"
+          ? Object.keys(responseData)[0]
+          : null;
+      if (!enumValue || !state.chartData[enumValue]) return;
+
       state.chartData[enumValue].parameters =
-        action.payload.values[enumValue]?.parameters;
-      state.data[enumValue] = action.payload.data[enumValue];
+        action.payload?.values?.[enumValue]?.parameters || {};
+      state.data[enumValue] = responseData[enumValue];
     });
     builder.addCase(singleAnalyticsThunk.rejected, (state, action) => {
       state.singleChartLoading = false;

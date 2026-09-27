@@ -11,7 +11,6 @@ import {
 import { Button, Form, Placeholder, Table } from "react-bootstrap";
 import { subPagesNavItems } from "../../../data/admin/accounts";
 import { ADMIN } from "../../../constants/routes";
-import useConfirmationAlert from "../../../components/admin/sweetAlerts/ConfirmationAlert";
 import DynamicLordIcon from "../../../components/DynamicLordIcon";
 import AddEditAccountModal from "../../../components/admin/modals/AddEditAccountModal";
 import PaginationDiv from "../../../components/admin/pagination/PaginationDiv";
@@ -44,28 +43,6 @@ const AccountRecords = () => {
   const [active, setActive] = useState(1);
   const { id } = useParams();
   const checkPermission = isTransactionAction({ id: id });
-  const triggerDeleteAccount = useConfirmationAlert({
-    icon: "warning",
-    title: "Confirm Account Delete",
-    text: "Are you sure you want to delete this account? This change cannot be undone.",
-    confirmButtonText: "Delete Account",
-    cancelButtonText: "Not Now",
-    confirmButton: "sweet-alert-red-button",
-    cancelButton: "sweet-alert-green-button",
-
-    successText: "Account has been successfully deleted.",
-  });
-  const triggerDeleteRecord = useConfirmationAlert({
-    icon: "warning",
-    title: "Confirm Record Delete",
-    text: "Are you sure you want to delete this account? This change cannot be undone.",
-    confirmButtonText: "Delete Record",
-    cancelButtonText: "Not Now",
-    confirmButton: "sweet-alert-red-button",
-    cancelButton: "sweet-alert-green-button",
-
-    successText: "Record has been successfully deleted.",
-  });
 
   const activeHandler = (page) => {
     setActive(page);
@@ -172,7 +149,7 @@ const AccountRecords = () => {
               dispatch(
                 getTransactionThunk({ accounts: [id, id], limit, page: active })
               ),
-            [id, limit, active]
+            [dispatch, id, limit, active]
           )}
           title={"Accounts"}
           subTitle="In this report, you will find your wallet status."
@@ -382,11 +359,6 @@ const AccountRecords = () => {
                     flatData?.map((item, index1) => {
                       const title = item?.category?.title;
                       const creditDebit = item?.creditDebit;
-                      const toAccountTitle = item?.to?.title;
-                      const accountTitle =
-                        creditDebit == creditDebitEnum.DEBIT
-                          ? toAccountTitle
-                          : item?.account?.title;
                       const amount = item?.amount;
                       const type = item?.type;
                       const icon =
@@ -404,7 +376,8 @@ const AccountRecords = () => {
                       const note = item?.note;
                       const payee = item?.payee?.name || "";
                       const labels = item?.labels;
-                      const date = item?.date;
+                      const rawDate = item?.date ? new Date(item.date) : new Date();
+                      const date = isNaN(rawDate.getTime()) ? new Date() : rawDate;
                       const formattedDate = isToday(date)
                         ? "Today"
                         : isYesterday(date)
@@ -533,7 +506,7 @@ const AccountRecords = () => {
                                     creditDebit == creditDebitEnum.DEBIT
                                   ? "- "
                                   : ""}
-                                {currencySymbol +
+                                {(currencySymbol || "") +
                                   formateAmount({ price: amount })}
                               </span>
                               <span className="fs-12 text-color-silver-sand text-end mt-1">

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import SettingLayout from "./Layout";
 import AccountTypeModel from "../../../components/admin/modals/AccountTypeModel";
 import AddEditAccountModal from "../../../components/admin/modals/AddEditAccountModal";
-import { addAccount, subscriptionTypeEnum } from "../../../helpers/enum";
+import { addAccount } from "../../../helpers/enum";
 import { Table } from "react-bootstrap";
 import {
   deleteAccountThunk,
@@ -17,8 +17,6 @@ import {
   getMomentDate,
   getMomentTimeWithSeconds,
 } from "../../../components/MomentFun";
-import useConfirmationAlert from "../../../components/admin/sweetAlerts/ConfirmationAlert";
-import DynamicLordIcon from "../../../components/DynamicLordIcon";
 import AccountsLoading from "./loaders/AccountsLoading";
 import ToggleMenu from "../../../components/admin/ToggleMenu";
 import {
@@ -48,18 +46,6 @@ const Accounts = () => {
   const isAdmin = isActiveData
     ? user?._id == singleUserGroupData?.createBy?._id
     : true;
-
-  const triggerDeleteRecord = useConfirmationAlert({
-    icon: "warning",
-    title: "Confirm Account Delete",
-    text: "Are you sure you want to delete this account? This change cannot be undone.",
-    confirmButtonText: "Delete Account",
-    cancelButtonText: "Not Now",
-    confirmButton: "sweet-alert-red-button",
-    cancelButton: "sweet-alert-green-button",
-
-    successText: "Account has been successfully deleted.",
-  });
 
   const handleCloseSelectAccount = () => {
     setSelectedAccountType(""), setIsAccountEdit({});
@@ -112,21 +98,11 @@ const Accounts = () => {
     }
   };
 
-  const handleSearch = (searchValue) => {
-    const searchedDataArray = data.filter((ele) => {
-      return (
-        ele.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        ele.accountType.title.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    });
-    setDataArray(searchedDataArray);
-  };
-
   useEffect(() => {
     if (data.length === 0) {
       dispatch(getAccountThunk());
     }
-  }, [dispatch]);
+  }, [data.length, dispatch]);
 
   useEffect(() => {
     setDataArray(data);
@@ -321,18 +297,16 @@ const Accounts = () => {
                           className={`text-truncate fw-semibold fs-16 ${
                             balance > 0
                               ? "text-color-light-green"
-                              : "text-color-invalid"
+                              : balance < 0
+                              ? "text-color-invalid"
+                              : ""
                           }`}
                         >
                           {balance === 0
-                            ? symbol + 0
+                            ? (symbol || "") + "0"
                             : balance > 0
-                            ? symbol + formateAmount({ price: balance })
-                            : "-" +
-                              symbol +
-                              String(formateAmount({ price: balance })).split(
-                                "-"
-                              )[1]}
+                            ? (symbol || "") + formateAmount(balance)
+                            : "-" + (symbol || "") + formateAmount(Math.abs(balance))}
                         </span>
                       </div>
                     </td>

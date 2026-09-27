@@ -6,7 +6,6 @@ import {
   addAccount,
   analyticsTypeEnum,
   groupAccessEnum,
-  subscriptionTypeEnum,
 } from "../../../helpers/enum";
 import AddEditAccountModal from "../../../components/admin/modals/AddEditAccountModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,10 +42,9 @@ import {
 } from "../../../store/dashboard/slice";
 import { useMediaQuery } from "react-responsive";
 import PremiumModal from "../../../components/admin/modals/PremiumModal";
-import Budget from "./Budget";
 import AlertModal from "../../../components/admin/modals/AlertModal";
 import AddCardModal from "../../../components/admin/modals/AddCardModal";
-// import { Purchases } from "@revenuecat/purchases-js";
+import ErrorBoundary from "../../../components/common/ErrorBoundary";
 
 const Dashboard = ({ user }) => {
   // redux selectors
@@ -219,104 +217,82 @@ const Dashboard = ({ user }) => {
         switch (item) {
           case analyticsTypeEnum.BALANCE_TREND:
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color"
-              >
-                <BalanceTrend
-                  data={dashboardData?.[analyticsTypeEnum.BALANCE_TREND]}
-                  enumTitle={analyticsTypeEnum.BALANCE_TREND}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color">
+                  <BalanceTrend
+                    data={dashboardData?.[analyticsTypeEnum.BALANCE_TREND]}
+                    enumTitle={analyticsTypeEnum.BALANCE_TREND}
+                  />
+                </div>
+              </ErrorBoundary>
             );
           case analyticsTypeEnum.SPENDING:
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color"
-              >
-                <ExpenseStructure
-                  data={dashboardData?.[analyticsTypeEnum.SPENDING]}
-                  enumTitle={analyticsTypeEnum.SPENDING}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color">
+                  <ExpenseStructure
+                    data={dashboardData?.[analyticsTypeEnum.SPENDING]}
+                    enumTitle={analyticsTypeEnum.SPENDING}
+                  />
+                </div>
+              </ErrorBoundary>
             );
           case analyticsTypeEnum.LAST_RECORD:
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color"
-              >
-                <LastRecords
-                  data={dashboardData?.[analyticsTypeEnum.LAST_RECORD]}
-                  enumTitle={analyticsTypeEnum.LAST_RECORD}
-                  onNoAccount={handleOpenAlert}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color">
+                  <LastRecords
+                    data={dashboardData?.[analyticsTypeEnum.LAST_RECORD]}
+                    enumTitle={analyticsTypeEnum.LAST_RECORD}
+                    onNoAccount={handleOpenAlert}
+                  />
+                </div>
+              </ErrorBoundary>
             );
           case analyticsTypeEnum.CASH_FLOW:
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color cash-flow-chart"
-              >
-                <CashFlow
-                  data={dashboardData?.[analyticsTypeEnum.CASH_FLOW]}
-                  enumTitle={analyticsTypeEnum.CASH_FLOW}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color cash-flow-chart">
+                  <CashFlow
+                    data={dashboardData?.[analyticsTypeEnum.CASH_FLOW]}
+                    enumTitle={analyticsTypeEnum.CASH_FLOW}
+                  />
+                </div>
+              </ErrorBoundary>
             );
           case analyticsTypeEnum.COSTLY_EXPENSES:
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color cash-flow-chart"
-              >
-                <TopExpense
-                  data={dashboardData?.[analyticsTypeEnum.COSTLY_EXPENSES]}
-                  enumTitle={analyticsTypeEnum.COSTLY_EXPENSES}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color cash-flow-chart">
+                  <TopExpense
+                    data={dashboardData?.[analyticsTypeEnum.COSTLY_EXPENSES]}
+                    enumTitle={analyticsTypeEnum.COSTLY_EXPENSES}
+                  />
+                </div>
+              </ErrorBoundary>
             );
           case analyticsTypeEnum.CURRENCY:
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color cash-flow-chart"
-              >
-                <BalanceByCurrency
-                  data={dashboardData?.[analyticsTypeEnum.CURRENCY]}
-                  enumTitle={analyticsTypeEnum.CURRENCY}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color cash-flow-chart">
+                  <BalanceByCurrency
+                    data={dashboardData?.[analyticsTypeEnum.CURRENCY]}
+                    enumTitle={analyticsTypeEnum.CURRENCY}
+                  />
+                </div>
+              </ErrorBoundary>
             );
           case analyticsTypeEnum.PLANNED:
-            // if (dashboardData?.PLANNED?.length > 0) {
             return (
-              <div
-                key={index}
-                className="item bg-white p-4 br-18 border common-border-color"
-              >
-                <Planned
-                  data={dashboardData?.[analyticsTypeEnum.PLANNED]}
-                  enumTitle={analyticsTypeEnum.PLANNED}
-                />
-              </div>
+              <ErrorBoundary isWidget key={index}>
+                <div className="item bg-white p-4 br-18 border common-border-color">
+                  <Planned
+                    data={dashboardData?.[analyticsTypeEnum.PLANNED]}
+                    enumTitle={analyticsTypeEnum.PLANNED}
+                  />
+                </div>
+              </ErrorBoundary>
             );
-          // }
-          // case analyticsTypeEnum.BUDGET:
-          //   return (
-          //     <div
-          //       key={index}
-          //       className="item bg-white p-4 br-18 border common-border-color"
-          //     >
-          //       <Budget
-          //         data={dashboardData?.[analyticsTypeEnum.BUDGET]}
-          //         enumTitle={analyticsTypeEnum.BUDGET}
-          //       />
-          //     </div>
-          //   );
-          // break;
           default:
             return null;
         }
@@ -368,9 +344,9 @@ const Dashboard = ({ user }) => {
       } else {
         dispatch(setFilterMultipleAccounts());
       }
-      setIsAccountChecked(setIsAccountChecked((pre) => !pre));
+      setIsAccountChecked((pre) => !pre);
     },
-    [allAccountId]
+    [allAccountId, dispatch]
   );
 
   const onSuccess = async (data) => {
@@ -437,17 +413,12 @@ const Dashboard = ({ user }) => {
           const icon = item?.accountType?.icon;
           // const color = item?.color;
           const title = item?.title;
-          // const balance = symbol + "" + item?.balance;
+          const rawBalance = Number(item?.balance) || 0;
+          const safeSymbol = symbol || "";
           const balance =
-            item?.balance < 0
-              ? "- " +
-                symbol +
-                `${
-                  formateAmount({ price: item?.balance })
-                    ?.toString()
-                    ?.split("-")?.[1]
-                }`
-              : symbol + "" + formateAmount({ price: item?.balance });
+            rawBalance < 0
+              ? "- " + safeSymbol + formateAmount(Math.abs(rawBalance))
+              : safeSymbol + formateAmount(rawBalance);
           const accountAccess =
             singleUserGroupData?.member?.accounts[index]?.permission || "";
 
@@ -517,7 +488,6 @@ const Dashboard = ({ user }) => {
     isAdmin,
     isAllowAccSelect,
     singleUserGroupData,
-    user,
     xs,
     dispatch,
   ]);
@@ -544,7 +514,7 @@ const Dashboard = ({ user }) => {
         toDate: formatDate(state[0].endDate, "YYYY-MM-DD"),
       })
     );
-  }, [defaultTimePeriod]);
+  }, [defaultTimePeriod, dispatch, state]);
 
   useEffect(() => {
     if (prevChartDataRef.current !== chartData) {
@@ -555,7 +525,7 @@ const Dashboard = ({ user }) => {
       );
       prevChartDataRef.current = chartData;
     }
-  }, [chartData]);
+  }, [chartData, data?.length, dispatch]);
 
   // useEffect(() => {
   //   if (swiperRef.current && swiperRef.current.swiper) {
@@ -577,8 +547,8 @@ const Dashboard = ({ user }) => {
                   Welcome,{" "}
                   <span className="fw-bold">
                     {user?.username ||
-                      user?.email?.split(/[_\-.]/)?.[0] ||
-                      "user"}
+                      (user?.email ? user.email.split("@")[0] : "") ||
+                      "User"}
                   </span>
                 </h2>
                 <p className="text-color-light-gray fs-14 m-0">

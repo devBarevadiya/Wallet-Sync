@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { memo, useCallback, useEffect, useState } from "react";
 import {
   capitalizeFirstLetter,
@@ -5,7 +6,6 @@ import {
 } from "../../../helpers/commonFunctions";
 import { useDispatch } from "react-redux";
 import {
-  setSelectedSubCategory,
   setShowSubCategories,
 } from "../../../store/budget/slice";
 import { useSelector } from "react-redux";
@@ -13,15 +13,14 @@ import { budgetLimitTypeEnum } from "../../../helpers/enum";
 import CategoryModal from "../modals/budgetModals/CategoryModal";
 import { getCategoryThunk } from "../../../store/actions";
 
-const SubCategoryRemainList = ({ data = [], editData }) => {
-  const { showSubCategories, detailsData, selectedSubCategory } = useSelector(
+const SubCategoryRemainList = ({ data = [] }) => {
+  const { showSubCategories } = useSelector(
     (store) => store.Budget
   );
   const { data: categories, loading } = useSelector((state) => state.Category);
   const { baseCurrency } = useSelector((store) => store.Auth);
   const [isModal, setIsModal] = useState(false);
-  const [editvalue, setEditValue] = useState({});
-  const currencySymbol = baseCurrency?.symbol;
+  const currencySymbol = baseCurrency?.symbol || "";
   const dispatch = useDispatch();
 
   const headCategory = showSubCategories?.headCategory;
@@ -46,14 +45,7 @@ const SubCategoryRemainList = ({ data = [], editData }) => {
     (item) => !setCategory.has(item?.category?._id)
   );
 
-  const updatedCategories = newCategories?.map(
-    (item) =>
-      item?._id === selectedSubCategory?.category
-        ? { ...item, ...selectedSubCategory } // Replace the matching object
-        : item // Keep other objects unchanged
-  );
-
-  const handleOpenModal = useCallback((value) => {
+  const handleOpenModal = useCallback(() => {
     // setEditValue(value);
     setIsModal(true);
   }, []);
@@ -72,7 +64,7 @@ const SubCategoryRemainList = ({ data = [], editData }) => {
     if (!categories?.length) {
       dispatch(getCategoryThunk());
     }
-  }, []);
+  }, [categories?.length, dispatch]);
 
   return (
     <>
@@ -256,3 +248,7 @@ const SubCategoryRemainList = ({ data = [], editData }) => {
 };
 
 export default memo(SubCategoryRemainList);
+
+SubCategoryRemainList.propTypes = {
+  data: PropTypes.object,
+};

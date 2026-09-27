@@ -1,12 +1,18 @@
-import React from "react";
 import Chart from "react-apexcharts";
+import PropTypes from "prop-types";
 import {
   capitalizeFirstLetter,
   formateAmount,
+  safeNumber,
 } from "../../../helpers/commonFunctions";
 
 const BudgetChart = ({ spendAmount, maxAmount, currency, period }) => {
-  const percentage = ((spendAmount / maxAmount) * 100).toFixed(2);
+  const safeSpendAmount = safeNumber(spendAmount);
+  const safeMaxAmount = safeNumber(maxAmount);
+  const percentage =
+    safeMaxAmount > 0
+      ? Math.min(100, Math.max(0, (safeSpendAmount / safeMaxAmount) * 100))
+      : 0;
 
   const options = {
     chart: {
@@ -34,7 +40,7 @@ const BudgetChart = ({ spendAmount, maxAmount, currency, period }) => {
             // formatter: () => "Monthly",
           },
           value: {
-            formatter: (val) => spendAmount,
+            formatter: () => safeSpendAmount,
             // formatter: (val) => `₹${spendAmount}`,
             color: "#000",
             fontSize: "24px",
@@ -48,7 +54,7 @@ const BudgetChart = ({ spendAmount, maxAmount, currency, period }) => {
           },
           total: {
             show: true,
-            label: `-${(maxAmount / 30).toFixed(2)} per day`,
+            label: `-${(safeMaxAmount / 30).toFixed(2)} per day`,
             color: "#6c757d",
             fontSize: "14px",
             fontWeight: 400,
@@ -66,7 +72,7 @@ const BudgetChart = ({ spendAmount, maxAmount, currency, period }) => {
     labels: ["Progress"],
   };
 
-  const series = [parseFloat(percentage)];
+  const series = [safeNumber(percentage)];
 
   return (
     <div className="chart-container position-relative">
@@ -78,12 +84,12 @@ const BudgetChart = ({ spendAmount, maxAmount, currency, period }) => {
           alt=""
         />
         <span className="mt-1 fs-16 fw-medium">
-          {formateAmount({ price: spendAmount })}
+          {formateAmount({ price: safeSpendAmount })}
         </span>
         <span className="fs-12">
           <span className="">
             {currency}
-            {formateAmount({ price: maxAmount })}
+            {formateAmount({ price: safeMaxAmount })}
           </span>
           <span className="ms-1">{capitalizeFirstLetter(period)}</span>
         </span>
@@ -94,3 +100,10 @@ const BudgetChart = ({ spendAmount, maxAmount, currency, period }) => {
 };
 
 export default BudgetChart;
+
+BudgetChart.propTypes = {
+  spendAmount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  maxAmount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  currency: PropTypes.string,
+  period: PropTypes.string,
+};

@@ -7,13 +7,12 @@ import { getAccountThunk } from "../../../store/actions";
 import { useNavigate } from "react-router-dom";
 import { ADMIN } from "../../../constants/routes";
 import { BALANCE } from "../../../routes/AdminRoutes";
-import DynamicLordIcon from "../../../components/DynamicLordIcon";
 import { clearSingleData } from "../../../store/account/slice";
 import { clearDashboardData } from "../../../store/dashboard/slice";
 import { clearTransitionRecords } from "../../../store/transaction/slice";
 import { formateAmount, isPremium } from "../../../helpers/commonFunctions";
 import PropTypes from "prop-types";
-import { addAccount, subscriptionTypeEnum } from "../../../helpers/enum";
+import { addAccount } from "../../../helpers/enum";
 import AccountTypeModel from "../../../components/admin/modals/AccountTypeModel";
 import AddEditAccountModal from "../../../components/admin/modals/AddEditAccountModal";
 import PremiumModal from "../../../components/admin/modals/PremiumModal";
@@ -70,7 +69,7 @@ const Accounts = ({ user }) => {
     } else {
       setPremiumModel(true);
     }
-  }, [accessLimit, data, user]);
+  }, [accessLimit, data]);
 
   const handleCloseSelectAccount = () => {
     setSelectedAccountType("");
@@ -78,7 +77,7 @@ const Accounts = ({ user }) => {
 
   const onSuccess = useCallback(() => {
     dispatch(getAccountThunk());
-  }, []);
+  }, [dispatch]);
 
   const handleCloseAlert = useCallback(() => {
     setAlertModal(false);
@@ -252,18 +251,16 @@ const Accounts = ({ user }) => {
                                 className={`fw-semibold ${
                                   balance > 0
                                     ? "text-color-light-green"
-                                    : "text-color-invalid"
+                                    : balance < 0
+                                    ? "text-color-invalid"
+                                    : ""
                                 }`}
                               >
                                 {balance === 0
-                                  ? symbol + 0
+                                  ? (symbol || "") + "0"
                                   : balance > 0
-                                  ? symbol + formateAmount({ price: balance })
-                                  : "-" +
-                                    symbol +
-                                    String(
-                                      formateAmount({ price: balance })
-                                    ).split("-")[1]}
+                                  ? (symbol || "") + formateAmount(balance)
+                                  : "-" + (symbol || "") + formateAmount(Math.abs(balance))}
                               </span>
                               <i className="fs-2 fw-normal ri-arrow-right-s-line"></i>
                             </div>

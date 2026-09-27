@@ -21,7 +21,7 @@ export const signInThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -45,7 +45,7 @@ export const signUpThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -68,7 +68,7 @@ export const forgotPasswordThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -89,7 +89,7 @@ export const resetPasswordThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -110,7 +110,7 @@ export const changePasswordThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -138,7 +138,7 @@ export const socialLoginThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -163,7 +163,7 @@ export const firebaseRegisterAdminThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -172,18 +172,21 @@ export const firebaseRegisterAdminThunk = createAsyncThunk(
 
 export const verifyTokenThunk = createAsyncThunk(
   "verifyTokenThunk",
-  async ({ token }, { rejectWithValue }) => {
+  async ({ token } = {}, { rejectWithValue }) => {
     try {
       const { data } = await backendHelper.verifyToken({ token });
       return data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message;
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Unable to verify your session.";
       if (errorMessage) {
         toastError(errorMessage);
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -203,7 +206,7 @@ export const deleteUserDataThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -223,7 +226,7 @@ export const deleteTransactionsThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -243,7 +246,7 @@ export const deleteTransactionsAppSettingsThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -264,7 +267,7 @@ export const changeBaseCurrencyThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -284,7 +287,7 @@ export const updateUserDetailsThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -305,7 +308,7 @@ export const userNotificationThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -325,7 +328,7 @@ export const userLogoutThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback } from "react";
 import { Table } from "react-bootstrap";
 import { transactionTypeEnum } from "../../../helpers/enum";
 import { formateAmount } from "../../../helpers/commonFunctions";
@@ -27,8 +27,10 @@ const PlannedPaymentRecords = ({ data, handleEdit }) => {
   );
 
   const getDaysLeft = useCallback((value) => {
+    if (!value) return 0;
     const today = new Date();
     const target = new Date(value);
+    if (isNaN(target.getTime())) return 0;
 
     today.setHours(0, 0, 0, 0);
     target.setHours(0, 0, 0, 0);
@@ -41,7 +43,7 @@ const PlannedPaymentRecords = ({ data, handleEdit }) => {
     (page) => {
       dispatch(getPlannedByFiltersThunk({ ...filterOptions, page }));
     },
-    [filterOptions]
+    [dispatch, filterOptions]
   );
 
   // useEffect(() => {
@@ -114,14 +116,14 @@ const PlannedPaymentRecords = ({ data, handleEdit }) => {
                                 ? "- "
                                 : ""
                               : ""}
-                            {currencySymbol + formateAmount({ price: amount })}
+                            {(currencySymbol || "") + formateAmount({ price: amount })}
                           </span>
                           {nextPaymentDate ? (
                             <span className="fs-13 text-color-silver-sand text-capitalize d-block">
                               {` ${
                                 timeDifference > 0
                                   ? timeDifference == 1
-                                    ? "Tommorow"
+                                    ? "Tomorrow"
                                     : `in ${timeDifference} days`
                                   : timeDifference == 0
                                   ? "Today"

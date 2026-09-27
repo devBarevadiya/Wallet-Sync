@@ -17,42 +17,49 @@ const SelectAccountModal = ({
     (store) => store.Account,
     (prev, next) => prev === next
   );
-  const [accounts, setAccounts] = useState(value);
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const [accounts, setAccounts] = useState(() =>
+    Array.isArray(value) ? value : value ? [value] : []
+  );
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isOpen });
 
   const handleConfirm = useCallback(() => {
-    onSelectValue && onSelectValue(accounts);
+    if (onSelectValue) {
+      if (multivalue) {
+        onSelectValue(accounts);
+      } else {
+        onSelectValue(accounts?.[0] || null);
+      }
+    }
     onClose();
-  }, [accounts, onSelectValue, onClose]);
+  }, [accounts, onSelectValue, onClose, multivalue]);
 
-  const handleChange = useCallback((value) => {
+  const handleChange = useCallback((val) => {
     setAccounts((prev) => {
-      const isExist = prev.some((item) => item._id === value._id);
+      const currentList = Array.isArray(prev) ? prev : [];
+      const isExist = currentList.some((item) => item?._id === val?._id);
       return isExist
-        ? prev.filter((item) => item._id !== value._id)
-        : [...prev, value];
+        ? currentList.filter((item) => item?._id !== val?._id)
+        : [...currentList, val];
     });
   }, []);
 
   const handleClose = useCallback(() => {
-    // if (multivalue) {
-    //   onSelectValue && onSelectValue(accounts);
-    // }
     onClose();
   }, [onClose]);
 
   const handleSelectAll = useCallback(
     (isCheck) => {
-      isCheck ? setAccounts(data) : setAccounts([]);
+      isCheck ? setAccounts(data || []) : setAccounts([]);
     },
     [data]
   );
 
   useEffect(() => {
-    if (JSON.stringify(value) !== JSON.stringify(accounts)) {
-      setAccounts(value);
+    const nextVal = Array.isArray(value) ? value : value ? [value] : [];
+    if (JSON.stringify(nextVal) !== JSON.stringify(accounts)) {
+      setAccounts(nextVal);
     }
-  }, [value, isOpen]);
+  }, [accounts, isOpen, value]);
 
   return (
     <ModelWrapper
@@ -67,7 +74,7 @@ const SelectAccountModal = ({
           <span className="pb-4 ms-1 d-flex align-items-center gap-2 user-select-none">
             <Form.Check
               id="all-account"
-              checked={accounts?.length == data?.length}
+              checked={accounts?.length === data?.length}
               className="square-check text-color-light-gray fs-18"
               type="checkbox"
               onChange={(e) => handleSelectAll(e.target.checked)}
@@ -82,13 +89,14 @@ const SelectAccountModal = ({
         )}
         <ul className="m-0 p-0 d-flex flex-column gap-3 cursor-pointer">
           {data?.map((item, index) => {
-            const title = item?.title;
-            const balance = item?.balance;
+            const title = item?.title || "";
+            const balance = Number(item?.balance || 0);
             const icon = `${
               import.meta.env.VITE_DIGITAL_OCEAN_SPACES_BASE_URL
-            }${item?.accountType?.icon}`;
-            const currencySymbol = item?.currency?.symbol;
+            }${item?.accountType?.icon || ""}`;
+            const currencySymbol = item?.currency?.symbol || "";
             const isGreater = balance > 0;
+            const isNegative = balance < 0;
             const id = item?._id;
 
             return (
@@ -97,12 +105,15 @@ const SelectAccountModal = ({
                 className="d-flex align-items-center justify-content-between pb-2 cursor-pointer border-bottom border-dark-white-color"
                 onClick={() => {
                   if (!multivalue) {
-                    onSelectValue(item);
+                    onSelectValue && onSelectValue(item);
                     onClose();
                   }
                 }}
               >
-                <Form.Label className="d-flex justify-content-between w-100 gap-3 align-items-center">
+                <Form.Label
+                  htmlFor={multivalue ? `acc-check-${id || index}` : undefined}
+                  className="d-flex justify-content-between w-100 gap-3 align-items-center cursor-pointer mb-0"
+                >
                   <div className="d-flex gap-3">
                     <img className="w-45px h-45px br-8" src={icon} alt="" />
                     <span>
@@ -113,18 +124,21 @@ const SelectAccountModal = ({
                         className={`${
                           isGreater
                             ? "text-color-light-green"
-                            : "text-color-invalid"
+                            : isNegative
+                            ? "text-color-invalid"
+                            : "text-color-monsoon"
                         } fs-16 fw-medium text-nowrap`}
                       >
-                        {isGreater ? "+ " : ""}
-                        {currencySymbol + formateAmount({ price: balance })}
+                        {isGreater ? "+ " : isNegative ? "- " : ""}
+                        {currencySymbol + formateAmount({ price: Math.abs(balance) })}
                       </span>
                     </span>
                   </div>
 
                   {multivalue ? (
                     <Form.Check
-                      checked={accounts.some((item) => item._id === id)}
+                      id={`acc-check-${id || index}`}
+                      checked={Array.isArray(accounts) && accounts.some((acc) => acc?._id === id)}
                       className="square-check text-color-light-gray fs-18 ms-auto ms-4"
                       type="checkbox"
                       onChange={() => handleChange(item)}
@@ -137,11 +151,13 @@ const SelectAccountModal = ({
             );
           })}
         </ul>
-        <Modal.Footer className="p-0 mt-4">
-          <Button className="primary-btn fs-16 w-100 m-0" onClick={handleConfirm}>
-            Confirm
-          </Button>
-        </Modal.Footer>
+        {multivalue && (
+          <Modal.Footer className="p-0 mt-4">
+            <Button className="primary-btn fs-16 w-100 m-0" onClick={handleConfirm}>
+              Confirm
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal.Body>
       {/* <div className="mt-4"> */}
       {/* </div> */}
@@ -154,7 +170,7 @@ SelectAccountModal.propTypes = {
   onClose: PropTypes.func,
   onSelectValue: PropTypes.func,
   multivalue: PropTypes.bool,
-  value: PropTypes.array,
+  value: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
 export default memo(SelectAccountModal);

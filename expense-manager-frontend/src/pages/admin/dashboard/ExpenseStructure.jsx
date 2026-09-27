@@ -8,16 +8,18 @@ import { Link } from "react-router-dom";
 import { ADMIN } from "../../../constants/routes";
 import { setChartOrderHide } from "../../../store/dashboard/slice";
 import { useDispatch } from "react-redux";
-import { formateAmount } from "../../../helpers/commonFunctions";
+import { formateAmount, safeNumber } from "../../../helpers/commonFunctions";
 import { analyticsTypeEnum } from "../../../helpers/enum";
 
 const ExpenseStructure = ({ data = [], enumTitle = "", isShowList = true }) => {
   const chartRef = useRef(null);
   let dataSorting =
-    [...data].sort((a, b) => b.amount - a.amount)?.slice(0, 3) || [];
+    [...data]
+      .sort((a, b) => safeNumber(b?.amount) - safeNumber(a?.amount))
+      ?.slice(0, 3) || [];
   const restData = [...data]?.slice(3);
   const totalRestAmount = restData?.reduce(
-    (acc, curr) => acc + curr?.amount,
+    (acc, curr) => acc + safeNumber(curr?.amount),
     0
   );
 
@@ -45,7 +47,9 @@ const ExpenseStructure = ({ data = [], enumTitle = "", isShowList = true }) => {
     colorData = [],
   } = dataSorting.reduce(
     (acc, value) => {
-      if (value?.amount !== undefined) acc?.amountData.push(value?.amount);
+      if (value?.amount !== undefined) {
+        acc?.amountData.push(safeNumber(value?.amount));
+      }
       if (value?.title !== undefined) acc?.titleData.push(value?.title);
       if (value?.color !== undefined) acc?.colorData.push(value?.color);
       return acc;
@@ -64,10 +68,10 @@ const ExpenseStructure = ({ data = [], enumTitle = "", isShowList = true }) => {
       },
     },
     events: {
-      dataPointMouseEnter: function (event, chartContext, config) {
+      dataPointMouseEnter: function () {
         // console.log("Hovered over:", config.seriesIndex); // Log series index when hovered
       },
-      dataPointMouseLeave: function (event, chartContext, config) {
+      dataPointMouseLeave: function () {
         // console.log("Mouse left:", config.seriesIndex); // Log when mouse leaves
       },
     },

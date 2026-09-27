@@ -228,27 +228,29 @@ const Records = () => {
     setSelectedAccountType(type);
   }, []);
 
-  const sortingFunctions = {
-    "A-Z": (a, b) => a.category.title.localeCompare(b.category.title),
-    "Z-A": (a, b) => b.category.title.localeCompare(a.category.title),
-    "Lowest First": (a, b) => a.amount - b.amount,
-    "Highest First": (a, b) => b.amount - a.amount,
-    "": () => 0,
-  };
+  const handleFilter = useCallback(
+    (sortByValue, searchValue) => {
+      setSortBy(sortByValue);
+      setSearchValue(searchValue);
+      // const searchedDataArray = data.filter((ele) => {
+      //   return (
+      //     ele.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      //     ele.accountType.title.toLowerCase().includes(searchValue.toLowerCase())
+      //   );
+      // });
 
-  const handleFilter = (sortByValue, searchValue) => {
-    setSortBy(sortByValue);
-    setSearchValue(searchValue);
-    // const searchedDataArray = data.filter((ele) => {
-    //   return (
-    //     ele.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-    //     ele.accountType.title.toLowerCase().includes(searchValue.toLowerCase())
-    //   );
-    // });
-
-    const sortedSearchedData = flatData.sort(sortingFunctions[sortByValue]);
-    setDataArray(sortedSearchedData);
-  };
+      const sortingFunctions = {
+        "A-Z": (a, b) => a.category.title.localeCompare(b.category.title),
+        "Z-A": (a, b) => b.category.title.localeCompare(a.category.title),
+        "Lowest First": (a, b) => a.amount - b.amount,
+        "Highest First": (a, b) => b.amount - a.amount,
+        "": () => 0,
+      };
+      const sortedSearchedData = flatData.sort(sortingFunctions[sortByValue]);
+      setDataArray(sortedSearchedData);
+    },
+    [flatData]
+  );
 
   const handleDeleteRecord = async () => {
     if (selectedId?.length > 0) {
@@ -332,12 +334,12 @@ const Records = () => {
   useEffect(() => {
     getTransactionPara();
     setSelectedId([]);
-  }, [location.search, searchState, active]);
+  }, [active, getTransactionPara, searchState]);
 
   useEffect(() => {
     setDataArray(flatData);
     handleFilter(sortBy, searchValue);
-  }, [data]);
+  }, [data, flatData, handleFilter, searchValue, sortBy]);
 
   return (
     <>
@@ -536,12 +538,7 @@ const Records = () => {
                             const id = item?._id;
 
                             const title = item?.category?.title;
-                            const toAccountTitle = item?.to?.title;
                             const creditDebit = item?.creditDebit;
-                            const accountTitle =
-                              creditDebit == creditDebitEnum.DEBIT
-                                ? toAccountTitle
-                                : item?.account?.title;
                             const accountId = item?.account?._id;
                             const amount = item?.amount;
                             const type = item?.type;
@@ -557,7 +554,8 @@ const Records = () => {
                             const note = item?.note;
                             const payee = item?.payee?.name || "";
                             const labels = item?.labels;
-                            const date = new Date(item?.date);
+                            const rawDate = item?.date ? new Date(item.date) : new Date();
+                            const date = isNaN(rawDate.getTime()) ? new Date() : rawDate;
                             const checkPermission = isTransactionAction({
                               id: accountId,
                             });
@@ -713,7 +711,7 @@ const Records = () => {
                                             creditDebit == creditDebitEnum.DEBIT
                                           ? "- "
                                           : ""}
-                                        {currencySymbol +
+                                        {(currencySymbol || "") +
                                           formateAmount({ price: amount })}
                                       </span>
                                       <span className="fs-12 text-color-silver-sand text-end mt-1">

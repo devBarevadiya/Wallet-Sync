@@ -1,35 +1,31 @@
 import {
-  debouncedToastError,
-  handleCloseBackdrop,
-  handleShowBackdrop,
   isNotPremium,
-  isPremium,
   isShowPromoCode,
   logout,
 } from "../../../helpers/commonFunctions";
 import PropTypes from "prop-types";
-import SearchField from "../../inputFields/SearchField";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setIsSettingsSidbarCanvas,
   setIsSidebarCanvas,
 } from "../../../store/filters/slice";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Form, FormControl, Modal } from "react-bootstrap";
+import { Button, Form, FormControl } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import { useClickOUtside } from "../../../helpers/customHooks";
-import { ADMIN, CLIENT, OTHER_AUTH } from "../../../constants/routes";
-import { useNavigate } from "react-router-dom";
+import { ADMIN, OTHER_AUTH } from "../../../constants/routes";
+import { useLocation, useNavigate } from "react-router-dom";
 import { setSearchValueState } from "../../../store/transaction/slice";
 import { debounce } from "lodash";
 import ProfileModal from "../modals/ProfileModal";
 import { Image } from "../../../data/images";
-import { authRoleEnum, subscriptionTypeEnum } from "../../../helpers/enum";
+import { authRoleEnum } from "../../../helpers/enum";
 import ApplyPromoCodeModal from "../modals/promoCode/ApplyPromoCodeModal";
 import GeneratePromoCodeModal from "../modals/promoCode/GeneratePromoCodeModal";
 
 const Header = ({ email, role }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const notificationData = [1, 1, 1];
   const { isSidebarCanvas } = useSelector((store) => store.Filters);
   const { user, loading } = useSelector((store) => store.Auth);
@@ -43,8 +39,10 @@ const Header = ({ email, role }) => {
   const [showPromoModal, setPromoModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isSearch, setIsSearch] = useState(false);
-  const firstLetter = role?.slice(0, 1);
-  const otherLetter = role?.slice(1, role?.length);
+  const userRole = role || user?.role || "";
+  const firstLetter = userRole ? userRole.slice(0, 1).toUpperCase() : "";
+  const otherLetter = userRole ? userRole.slice(1).toLowerCase() : "";
+  const displayName = user?.username || user?.email || email || (loading ? "Loading..." : "");
   const dispatch = useDispatch();
   const handleSideCanvas = () => dispatch(setIsSidebarCanvas(!isSidebarCanvas));
   const sm = useMediaQuery({ query: "(max-width: 500px)" });
@@ -72,37 +70,28 @@ const Header = ({ email, role }) => {
     dispatch(setSearchValueState(""));
   };
 
-  const handleSearch = useCallback(
-    debounce((value) => {
-      dispatch(setSearchValueState(value));
-      // setIsSearch(false);
-      value && navigate(ADMIN.RECORDS.PATH);
-    }, 500),
-    []
+  const handleSearch = useMemo(
+    () =>
+      debounce((value) => {
+        dispatch(setSearchValueState(value));
+        // setIsSearch(false);
+        value && navigate(ADMIN.RECORDS.PATH);
+      }, 500),
+    [dispatch, navigate]
   );
-
-  const handleShowNotification = () => {
-    if (showNotification) {
-      setShowNotification(false);
-      handleCloseBackdrop();
-    } else {
-      setShowNotification(true);
-      handleShowBackdrop();
-    }
-  };
 
   const openPromoModal = useCallback(() => {
     setPromoModal(true);
-  });
+  }, []);
 
   const closePromoModal = useCallback(() => {
     setPromoModal(false);
-  });
+  }, []);
 
   useEffect(() => {
     handleSearch(searchValue);
     // dispatch(setSearchValueState(""));
-  }, [searchValue]);
+  }, [handleSearch, searchValue]);
 
   useEffect(() => {
     return () => {
@@ -115,11 +104,11 @@ const Header = ({ email, role }) => {
     return () => {
       document.removeEventListener("mousedown", handleCloseProfilePopup);
     };
-  }, []);
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     dispatch(setIsSidebarCanvas(false));
-  }, [location.pathname]);
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     setSearchValue(searchState);
@@ -237,7 +226,7 @@ const Header = ({ email, role }) => {
               <i className="ri-settings-4-fill fs-21 text-color-gray"></i>
             </Button>
           ),
-          [md]
+          [dispatch, location.pathname, md, navigate]
         )}
 
         {showNotification && <div className="backdrop"></div>}
@@ -304,7 +293,7 @@ const Header = ({ email, role }) => {
                 />
                 <div className="flex-column lh-sm d-none d-md-flex">
                   <span className="fs-14 fw-semibold max-w-150px text-truncate">
-                    {email}
+                    {displayName}
                   </span>
                   <span className="fs-12 fw-medium text-color-gray">
                     {firstLetter}
@@ -363,7 +352,7 @@ const Header = ({ email, role }) => {
               </div>
             </Button>
           ),
-          [user, email, firstLetter, otherLetter, showUserDetails, loading]
+          [displayName, firstLetter, otherLetter, navigate, showUserDetails, user, loading]
         )}
         {/* profile modal */}
         <ProfileModal

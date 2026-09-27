@@ -106,7 +106,7 @@ const Templates = () => {
 
   useEffect(() => {
     dispatch(getTemplateThunk());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -262,14 +262,10 @@ const Templates = () => {
                           >
                             {type == transactionTypeEnum.INCOME ? "+" : "-"}
                             {balance === 0
-                              ? symbol + 0
+                              ? (symbol || "") + "0"
                               : balance > 0
-                              ? symbol + formateAmount({ price: balance })
-                              : "-" +
-                                symbol +
-                                String(formateAmount({ price: balance })).split(
-                                  "-"
-                                )[1]}
+                              ? (symbol || "") + formateAmount(balance)
+                              : "-" + (symbol || "") + formateAmount(Math.abs(balance))}
                           </span>
                         </div>
                       </td>

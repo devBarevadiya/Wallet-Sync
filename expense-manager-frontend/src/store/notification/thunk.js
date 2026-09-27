@@ -11,7 +11,7 @@ export const deviceTokenThunk = createAsyncThunk(
       const errorMessage = error.response?.data?.message;
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -28,7 +28,7 @@ export const customNotificationThunk = createAsyncThunk(
       const errorMessage = error.response?.data?.message;
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

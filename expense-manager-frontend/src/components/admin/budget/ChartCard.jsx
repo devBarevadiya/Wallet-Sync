@@ -1,4 +1,5 @@
-import React, { memo, useState } from "react";
+import PropTypes from "prop-types";
+import { memo, useState } from "react";
 import { BudgetData } from "../../../data/admin/budget/data";
 import BudgetChart from "./BudgetChart";
 import {
@@ -22,11 +23,8 @@ const BudgetCard = ({ type, data = {} }) => {
     (store) => store.Budget
   );
   const { baseCurrency } = useSelector((store) => store.Auth);
-  const currencySymbol = baseCurrency?.symbol;
+  const currencySymbol = baseCurrency?.symbol || "";
   const dispatch = useDispatch();
-
-  // Get the current date
-  const currentDate = new Date();
 
   //   "rollover": {
   //     "generatedAmount": 0,
@@ -42,8 +40,6 @@ const BudgetCard = ({ type, data = {} }) => {
   const period = data?.period;
   const spendAmount = data?.spendAmount;
 
-  const rolloverAmount = data?.rollover?.generatedAmount;
-  // const rolloverAcceptedAmount = data?.rollover?.acceptedAmount;
   const rolloverResponse = data?.rollover?.userResponse;
   // const rolloverResponse = data?.rollover?.userResponse;
 
@@ -108,28 +104,13 @@ const BudgetCard = ({ type, data = {} }) => {
   };
 
   // Format the date as "Month Year" (e.g., "November 2024")
-  const formattedDate = currentViewDate.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-
   // Function to calculate the percentage of spendAmount relative to maxAmount
   const calculatePercentage = (spendAmount, maxAmount) => {
-    if (maxAmount === 0) return 0;
-    return ((spendAmount / maxAmount) * 100).toFixed(0);
+    const safeMax = Number(maxAmount) || 0;
+    const safeSpend = Number(spendAmount) || 0;
+    if (safeMax <= 0) return 0;
+    return Math.round((safeSpend / safeMax) * 100);
   };
-
-  const budgetMaxAmount = BudgetData.data.maxAmount;
-  const budgetSpendAmount = BudgetData.data.spendAmount;
-  const budgetPeriod = BudgetData.data.period;
-
-  // Disable the previous button if we're at or before the createdAt month
-  const disablePreviousButton = currentViewDate <= createdAt;
-
-  // Disable the next button if we're at the current month (i.e., can't navigate past today)
-  const disableNextButton =
-    currentViewDate.getMonth() === currentDate.getMonth() &&
-    currentViewDate.getFullYear() === currentDate.getFullYear();
 
   return (
     <div className="responsive common-light-primary-shadow border common-border-color br-20 budgetCard card pt-0 mb-3 bg-white rounded overflow-hidden">
@@ -275,3 +256,8 @@ const BudgetCard = ({ type, data = {} }) => {
 };
 
 export default memo(BudgetCard);
+
+BudgetCard.propTypes = {
+  type: PropTypes.string,
+  data: PropTypes.object,
+};

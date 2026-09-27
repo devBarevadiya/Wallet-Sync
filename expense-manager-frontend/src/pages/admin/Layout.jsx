@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import Header from "../../components/admin/header/Header";
 import SideBar from "../../components/admin/sideBar/SideBar";
-import { cloneElement, useEffect } from "react";
+import { cloneElement, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ON_BOARDING } from "../../constants/routes";
 import { useSelector } from "react-redux";
@@ -12,17 +12,12 @@ import { messaging, requestNotification } from "../../firebase/config";
 import {
   deviceTokenThunk,
   getAccountThunk,
+  analyticsThunk,
   verifyTokenThunk,
 } from "../../store/actions";
 import { onMessage } from "firebase/messaging";
-import { toastSuccess } from "../../config/toastConfig";
 import { getAllGroupsThunk } from "../../store/group/thunk";
 import { logout } from "../../helpers/commonFunctions";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import Stripe from "../../components/stripe/Stripe";
-import Cancel from "../../components/stripe/Cancel";
-import { setCurrentStep } from "../../store/onBoarding/slice";
 import { setNotificationStatus } from "../../store/notification/slice";
 
 const AdminLayout = ({ children }) => {
@@ -32,15 +27,19 @@ const AdminLayout = ({ children }) => {
     loading,
     socialLoading,
   } = useSelector((store) => store.Auth);
-  const { data: accountData } = useSelector((store) => store.Account);
-  const { groupData, singleUserGroupData } = useSelector(
-    (store) => store.Group
-  );
+  const { groupData } = useSelector((store) => store.Group);
+  const { chartData } = useSelector((store) => store.Dashboard);
   const currency = user?.currencies;
   const nav = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const deviceToken = localStorage.getItem("deviceToken") || "";
+  const refreshInFlight = useRef(false);
+  const chartDataRef = useRef(chartData);
+  const hasGroupsRef = useRef(Boolean(groupData?.length));
+
+  chartDataRef.current = chartData;
+  hasGroupsRef.current = Boolean(groupData?.length);
 
   useEffect(() => {
     try {
@@ -63,12 +62,6 @@ const AdminLayout = ({ children }) => {
     if (!location.pathname.includes("settings")) dispatch(setDocumentTitle(""));
   }, [location.pathname, dispatch]);
 
-  useEffect(() => {
-    if (!groupData?.length && user?._id) {
-      dispatch(getAllGroupsThunk());
-    }
-  }, [user]);
-
   // if ("serviceWorker" in navigator) {
   //   window.addEventListener("load", () => {
   //     navigator.serviceWorker
@@ -86,40 +79,54 @@ const AdminLayout = ({ children }) => {
   // }
 
   useEffect(() => {
-    if ("Notification" in window) {
-      Notification.requestPermission().then(async (permission) => {
-        if (permission === "granted" && !deviceToken) {
+    let unsubscribeMessage = () => {};
+
+    const setupNotifications = async () => {
+      if (!("Notification" in window)) {
+        console.log("This browser does not support notifications.");
+        return;
+      }
+
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
           dispatch(setNotificationStatus("granted"));
-          const token = await requestNotification();
-          if (token) {
-            localStorage.setItem("deviceToken", token);
-            dispatch(
-              deviceTokenThunk({
-                deviceToken: token,
-                deviceType: "WEB",
-              })
-            );
+          if (!deviceToken) {
+            const notificationToken = await requestNotification();
+            if (notificationToken) {
+              localStorage.setItem("deviceToken", notificationToken);
+              dispatch(
+                deviceTokenThunk({
+                  deviceToken: notificationToken,
+                  deviceType: "WEB",
+                })
+              );
+            }
           }
-        } else if (permission === "denied") {
-          console.log("Notification permission denied.");
-          dispatch(setNotificationStatus("denied"));
         } else {
-          console.log("Notification permission closed or default state.");
-          dispatch(setNotificationStatus("default"));
+          dispatch(setNotificationStatus(permission));
         }
+      } catch (error) {
+        console.warn("Notification setup failed:", error);
+        dispatch(setNotificationStatus("default"));
+      }
+    };
+
+    setupNotifications();
+
+    try {
+      unsubscribeMessage = onMessage(messaging, (payload) => {
+        const notification = payload?.notification || {};
+        const title = notification.title || "";
+        if (!title || Notification.permission !== "granted") return;
+        new Notification(title, { ...notification });
       });
-    } else {
-      console.log("This browser does not support notifications.");
+    } catch (error) {
+      console.warn("Notification listener setup failed:", error);
     }
-    onMessage(messaging, (payload) => {
-      const notification = payload.notification || "";
-      const title = payload.notification.title || "";
-      // toastSuccess(notification);
-      new Notification(title, {
-        ...notification,
-      });
-    });
-  }, []);
+
+    return () => unsubscribeMessage();
+  }, [deviceToken, dispatch]);
 
   useEffect(() => {
     Swal.close();
@@ -128,11 +135,13 @@ const AdminLayout = ({ children }) => {
   useEffect(() => {
     const handleStorageChange = async (e) => {
       if (e.key === "token") {
-        const response = await dispatch(
-          verifyTokenThunk({ token: e.newValue })
-        );
-        if (verifyTokenThunk.rejected.match(response)) {
-          logout();
+        if (!e.newValue) {
+          // User logged out in another tab
+          logout(false);
+        } else {
+          // A different tab may have authenticated a different user. Reload so
+          // every Redux slice and page starts from the new user's data.
+          window.location.reload();
         }
       }
     };
@@ -146,30 +155,51 @@ const AdminLayout = ({ children }) => {
 
   useEffect(() => {
     const tokenHandler = async () => {
-      if (token) {
-        const response = await dispatch(verifyTokenThunk({ token }));
-        if (verifyTokenThunk.rejected.match(response)) {
-          logout();
+      if (refreshInFlight.current) return;
+      const currentToken = localStorage.getItem("token") || token;
+      if (currentToken) {
+        const response = await dispatch(verifyTokenThunk({ token: currentToken }));
+        if (verifyTokenThunk.fulfilled.match(response)) {
+          refreshInFlight.current = true;
+          try {
+            const refreshRequests = [
+              dispatch(getAccountThunk()),
+              dispatch(analyticsThunk(chartDataRef.current)),
+            ];
+            if (!hasGroupsRef.current) {
+              refreshRequests.push(dispatch(getAllGroupsThunk()));
+            }
+            await Promise.allSettled(refreshRequests);
+          } finally {
+            refreshInFlight.current = false;
+          }
+        } else if (verifyTokenThunk.rejected.match(response)) {
+          const status = response.payload?.status;
+          if (status === 401 || status === 403) {
+            logout(false);
+          }
         }
+      } else {
+        logout(false);
       }
     };
     tokenHandler();
-  }, [dispatch, token]);
 
-  useEffect(() => {
-    const fetchAccount = async () => {
-      if (!accountData?.length) {
-        const response = await dispatch(getAccountThunk());
-        if (getAccountThunk.fulfilled.match(response)) {
-          if (!response?.payload?.data?.length) {
-            // dispatch(setCurrentStep(3));
-            // nav(ON_BOARDING);
-          }
-        }
+    // Re-verify session and refresh data when user switches back to an idle tab
+    const handleVisibilityOrFocus = () => {
+      if (document.visibilityState === "visible") {
+        tokenHandler();
       }
     };
-    fetchAccount();
-  }, []);
+
+    document.addEventListener("visibilitychange", handleVisibilityOrFocus);
+    window.addEventListener("focus", handleVisibilityOrFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
+      window.removeEventListener("focus", handleVisibilityOrFocus);
+    };
+  }, [dispatch, token]);
 
   return (
     <>
@@ -179,7 +209,7 @@ const AdminLayout = ({ children }) => {
           className={`position-relative admin-primary-bg z-1 min-vh-100 w-100 overflow-x-hidden`}
         >
           <Header
-            email={user?.username || user?.email || "user@gmail.com"}
+            email={user?.username || user?.email || ""}
             role={user?.role}
           />
           <div className="h-70px"></div>

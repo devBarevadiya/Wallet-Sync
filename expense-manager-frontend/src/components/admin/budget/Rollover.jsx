@@ -1,10 +1,10 @@
+import PropTypes from "prop-types";
 import { memo, useCallback, useState } from "react";
 import { formateAmount } from "../../../helpers/commonFunctions";
 import { Button } from "react-bootstrap";
 import {
   budgetDetailsThunk,
   budgetTransactionsThunk,
-  getBudgetThunk,
   rolloverStatusThunk,
 } from "../../../store/actions";
 import { budgetRolloverUserResponse } from "../../../helpers/enum";
@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import CommonDeleteModal from "../modals/deleteModals/CommonDeleteModal";
 
-const Rollover = ({ currencySymbol }) => {
+const Rollover = ({ currencySymbol = "" }) => {
   const dispatch = useDispatch();
   const { filterData, actionLoading, detailsData } = useSelector(
     (store) => store.Budget
@@ -24,9 +24,7 @@ const Rollover = ({ currencySymbol }) => {
 
   const rolloverAmount = detailsData?.rollover?.generatedAmount;
   // const rolloverAcceptedAmount = detailsData?.rollover?.acceptedAmount;
-  const rolloverResponse = detailsData?.rollover?.userResponse;
-
-  const declineConfirmation = useConfirmationAlert({
+  useConfirmationAlert({
     icon: "warning",
     title: "Decline rollover ",
     text: "Are you sure you want to Decline rollover? This change cannot be undone.",
@@ -38,7 +36,7 @@ const Rollover = ({ currencySymbol }) => {
     successText: "Rollover Declined.",
   });
 
-  const acceptConfirmation = useConfirmationAlert({
+  useConfirmationAlert({
     icon: "warning",
     title: "Accept rollover ",
     text: "Are you sure you want to Accept rollover? This change cannot be undone.",
@@ -193,3 +191,7 @@ const Rollover = ({ currencySymbol }) => {
 };
 
 export default memo(Rollover);
+
+Rollover.propTypes = {
+  currencySymbol: PropTypes.string,
+};

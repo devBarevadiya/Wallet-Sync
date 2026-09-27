@@ -22,7 +22,7 @@ export const createPlannedThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -43,7 +43,7 @@ export const getPlannedThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -64,7 +64,7 @@ export const getPlannedByFiltersThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -85,7 +85,7 @@ export const updatePlannedThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -106,7 +106,7 @@ export const deletePlannedThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

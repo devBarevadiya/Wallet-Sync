@@ -55,7 +55,7 @@ const EditPlannedModal = ({
   const title = editData?.title;
   const categoryTitle = editData?.category?.title;
   const type = editData?.type;
-  const currencySymbol = editData?.account?.currency?.symbol;
+  const currencySymbol = editData?.account?.currency?.symbol || "";
   const amount = editData?.amount;
   const icon =
     import.meta.env.VITE_DIGITAL_OCEAN_SPACES_BASE_URL +
@@ -153,7 +153,7 @@ const EditPlannedModal = ({
 
   const handleEdit = useCallback(() => {
     handleClickOnEdit();
-  }, []);
+  }, [handleClickOnEdit]);
 
   const handlePagination = () => {
     dispatch(paymentPlannedPaginationThunk({ id: editId, page: page + 1 }));

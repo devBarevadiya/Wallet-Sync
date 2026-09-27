@@ -21,7 +21,7 @@ export const createTemplateThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -41,7 +41,7 @@ export const getTemplateThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -63,7 +63,7 @@ export const deleteTemplateThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -85,7 +85,7 @@ export const editTemplateThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

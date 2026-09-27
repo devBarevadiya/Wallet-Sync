@@ -10,11 +10,11 @@ const BalanceByCurrency = ({ data = [], enumTitle = "" }) => {
   const [isOpen, setIsOpen] = useState();
 
   const dispatch = useDispatch();
-  const totalAmount = data?.reduce((acc, value) => acc + value?.balance, 0);
+  const totalAmount = data?.reduce((acc, value) => acc + (Number(value?.balance) || 0), 0) || 0;
   const color = ["#6BC127", "#C75DE1", "#FFB800"];
 
-  const sortedData = [...data]
-    ?.sort((a, b) => b?.balance - a?.balance)
+  const sortedData = [...(data || [])]
+    ?.sort((a, b) => (Number(b?.balance) || 0) - (Number(a?.balance) || 0))
     ?.slice(0, 3);
   return (
     <div>
@@ -40,8 +40,8 @@ const BalanceByCurrency = ({ data = [], enumTitle = "" }) => {
           {sortedData?.map((item, index) => {
             const currency = item?.currency;
             const symbole = item?.symbol || "";
-            const balance = item?.balance;
-            const widthInPercent = Math.floor((balance / totalAmount) * 100);
+            const balance = Number(item?.balance) || 0;
+            const widthInPercent = totalAmount > 0 ? Math.min(100, Math.max(0, Math.floor((balance / totalAmount) * 100))) : 0;
             return (
               <li className={`${sortedData?.length == index+1 ? "pt-3" : "border-bottom border-dark-white-color py-3"}`} key={index}>
                 <div className="d-flex align-items-center justify-content-between ms-1 me-1">

@@ -2,29 +2,24 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "remixicon/fonts/remixicon.css";
 import "./index.css";
 import { Toaster } from "react-hot-toast";
-import React, { Suspense, useEffect, useState } from "react";
-import { getToken } from "./helpers/api_helper";
-import { useDispatch } from "react-redux";
-import { verifyTokenThunk } from "./store/actions";
-import { logout } from "./helpers/commonFunctions";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import Loader from "./components/loader/Loader";
 import { initGA, logPageView } from "./config/analytics";
 import { defineElement } from "@lordicon/element";
 import CustomHelmet from "./components/helmet/CustomHelmet";
 import AllRoutes from "./routes/AllRoutes";
 import { useSelector } from "react-redux";
-import { ErrorCode, Purchases, PurchasesError } from "@revenuecat/purchases-js";
+
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import { toastError, toastSuccess } from "./config/toastConfig";
 
 function App() {
   // const LazyAllRoutes = React.lazy(() => import("./routes/AllRoutes"));
-  const dispatch = useDispatch();
   const { documentTitle } = useSelector((store) => store.Filters);
-  const token = getToken();
   const location = useLocation();
   const [pageTitle, setPageTitle] = useState();
   const capitalizeFirstWord = (str) => {
@@ -36,23 +31,54 @@ function App() {
     .split("-")
     .join(" ");
 
-  window.addEventListener("message", (event) => {
-    if (event.origin === import.meta.env.VITE_LIVE_URL) {
-      const token = localStorage.getItem("token"); // Get token from localStorage
-      event.source.postMessage({ token }, event.origin); // Send back token
-    }
-  });
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.origin === import.meta.env.VITE_LIVE_URL) {
+        const currentToken = localStorage.getItem("token");
+        event.source?.postMessage({ token: currentToken }, event.origin);
+      }
+    };
 
-  if ("serviceWorker" in navigator) {
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return undefined;
+
+    let cancelled = false;
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js")
-      .then(function (registration) {
-        console.log("Registration successful, scope is:", registration.scope);
+      .then((registration) => {
+        if (!cancelled) {
+          console.log("Registration successful, scope is:", registration.scope);
+        }
       })
-      .catch(function (err) {
-        console.log("Service worker registration failed, error:", err);
+      .catch((err) => {
+        if (!cancelled) console.log("Service worker registration failed, error:", err);
       });
-  }
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      toastSuccess("Back online! Reconnecting to server...");
+    };
+    const handleOffline = () => {
+      toastError("You are currently offline. Changes will sync when reconnected.");
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     const lazyLoadItems = async () => {
@@ -85,37 +111,15 @@ function App() {
     );
   }, [location.pathname, titleValue]);
 
-  // useEffect(() => {
-  //   const validateApiKey = async () => {
-  //     try {
-  //       // const apiKey = "rcb_sb_tUhqDWVrAgXpswgyGKtQwvfmA";
-  //       // const apiKey = "rcb_KwnrhiobIwIsIFNXbgMvuEEoqSzb";
-  //       const apiKey = "strp_mBTnxgppRCkluePlJLwuwJvLRoC";
-  //       const api_key_regex = /^rcb_[a-zA-Z0-9_.-]+$/;
-  //       if (!api_key_regex.test(apiKey)) {
-  //         throw new PurchasesError(
-  //           ErrorCode.InvalidCredentialsError,
-  //           "Invalid API key. Use your RevenueCat Billing API key."
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching offerings:", error); // Handle errors here
-  //     }
-  //   };
-
-  //   validateApiKey();
-  // }, []);
-
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
       {pageTitle && (
         <CustomHelmet title={documentTitle ? documentTitle : pageTitle} />
       )}
-      {/* <Suspense fallback={<Loader />}>
-        <LazyAllRoutes />
-      </Suspense> */}
-      <AllRoutes />
+      <ErrorBoundary>
+        <AllRoutes />
+      </ErrorBoundary>
     </>
   );
 }

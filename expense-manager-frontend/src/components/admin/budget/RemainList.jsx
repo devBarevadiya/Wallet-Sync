@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
+import { useCallback, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   capitalizeFirstLetter,
@@ -19,8 +20,8 @@ const RemainList = ({ data = [] }) => {
   const { detailsData, loading } = useSelector((state) => state.Budget);
   const { data: categories } = useSelector((state) => state.Category);
   const { baseCurrency } = useSelector((store) => store.Auth);
-  const currencySymbol = baseCurrency?.symbol;
-  const headData = data?.headCategories;
+  const currencySymbol = baseCurrency?.symbol || "";
+  const headData = data?.headCategories || [];
   // const { headCategories, period } = BudgetData.data;
   const dispatch = useDispatch();
   const period = data?.period;
@@ -33,10 +34,6 @@ const RemainList = ({ data = [] }) => {
       //   spendLimitType: category?.headCategory?.spendLimitType,
       //   categories: category?.categories?.length > 0 ? category : [{}],
       // };
-
-      const [filterHead] = data?.headCategories?.filter(
-        (item) => item?.headCategory?._id == category?.headCategory?._id
-      ) || [{}];
 
       const [findHeadFromState] =
         categories?.filter(
@@ -86,7 +83,7 @@ const RemainList = ({ data = [] }) => {
         dispatch(setShowSubCategories({ ...category, categories: [{}] }));
       }
     },
-    [categories, data, dispatch]
+    [categories, dispatch]
   );
 
   // const headTotal = useMemo(
@@ -98,7 +95,7 @@ const RemainList = ({ data = [] }) => {
     if (!categories?.length) {
       dispatch(getCategoryThunk());
     }
-  }, []);
+  }, [categories?.length, dispatch]);
 
   return (
     <div className="responsive  common-light-primary-shadow border common-border-color br-20 budgetCard card overflow-hidden mb-3 bg-white rounded">
@@ -109,7 +106,6 @@ const RemainList = ({ data = [] }) => {
         {!loading &&
           headData.map((category, index) => {
             const icon = category?.headCategory?.icon;
-            const subCategories = category?.categories;
             const {
               headCategory,
               spendAmount,
@@ -262,3 +258,7 @@ const RemainList = ({ data = [] }) => {
 };
 
 export default RemainList;
+
+RemainList.propTypes = {
+  data: PropTypes.object,
+};

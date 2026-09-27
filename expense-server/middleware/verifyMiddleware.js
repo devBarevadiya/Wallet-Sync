@@ -53,12 +53,14 @@ const getActiveGroup = async (userId) => {
         member.user.toString() === userId.toString() && member.isActive
     );
 
-    if (member) {
+    if (member && Array.isArray(member.accounts)) {
       member.accounts.forEach((account) => {
-        accounts.push({
-          _id: account.account._id,
-          permission: account.permission,
-        });
+        if (account) {
+          accounts.push({
+            _id: account.account?._id || account.account,
+            permission: account.permission,
+          });
+        }
       });
     }
 
@@ -114,7 +116,7 @@ export const verifyUser = async (req, res, next) => {
     if (!user) return validateResponse(res, AuthErrorObj, 403);
 
     user.currency =
-      user.currencies.find((item) => item?.isBase)?.currency ?? null;
+      user.currencies?.find((item) => item?.isBase)?.currency ?? null;
 
     // delete user.currencies;
 

@@ -21,9 +21,10 @@ export const useModalScroll = ({ scrollStep = 50, enabled } = {}) => {
   const modalRef = useRef(null);
 
   useEffect(() => {
+    const isEnabled = typeof enabled === "boolean" ? enabled : Boolean(enabled !== undefined ? enabled : true);
     
     const handleKeyDown = (e) => {
-      if (!modalRef.current || !enabled) return;
+      if (!modalRef.current || !isEnabled) return;
 
       if (e.key == "ArrowDown") {
         modalRef.current.scrollBy({ top: scrollStep, behavior: "smooth" });
@@ -33,7 +34,7 @@ export const useModalScroll = ({ scrollStep = 50, enabled } = {}) => {
     };
 
     const handleWheel = (e) => {
-      if (!modalRef.current || !enabled) return;
+      if (!modalRef.current || !isEnabled) return;
       
       // Prevent default to avoid page scrolling when modal is open
       e.preventDefault();
@@ -45,17 +46,20 @@ export const useModalScroll = ({ scrollStep = 50, enabled } = {}) => {
       });
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    if (isEnabled) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
     
     // Add wheel event listener to the modal itself
-    if (modalRef.current && enabled) {
-      modalRef.current.addEventListener("wheel", handleWheel, { passive: false });
+    const node = modalRef.current;
+    if (node && isEnabled) {
+      node.addEventListener("wheel", handleWheel, { passive: false });
     }
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if (modalRef.current) {
-        modalRef.current.removeEventListener("wheel", handleWheel);
+      if (node) {
+        node.removeEventListener("wheel", handleWheel);
       }
     };
   }, [scrollStep, enabled]);

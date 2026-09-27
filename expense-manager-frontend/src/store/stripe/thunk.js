@@ -16,15 +16,15 @@ export const createStripeSessionThunk = createAsyncThunk(
       return data;
     } catch (error) {
       let errorMessage = "";
-      if (error.response.status !== 403) {
-        errorMessage = error.response?.data?.message;
+      if (error?.response?.status !== 403) {
+        errorMessage = error?.response?.data?.message;
       }
       if (errorMessage) {
         toastError(errorMessage);
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -45,7 +45,7 @@ export const getSubscriptionThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -66,7 +66,7 @@ export const cancelSubscriptionThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -82,15 +82,15 @@ export const upgradeSubscriptionThunk = createAsyncThunk(
       return data;
     } catch (error) {
       let errorMessage = "";
-      if (error.response.status !== 403) {
-        errorMessage = error.response?.data?.message;
+      if (error?.response?.status !== 403) {
+        errorMessage = error?.response?.data?.message;
       }
       if (errorMessage) {
         toastError(errorMessage);
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

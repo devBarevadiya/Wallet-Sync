@@ -8,7 +8,6 @@ import SelectField from "../../../../components/inputFields/SelectField";
 import {
   categoryIconTypeEnum,
   categoryNatureEnum,
-  categoryTypeEnum,
 } from "../../../../helpers/enum";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
@@ -33,7 +32,7 @@ const Category = ({ isOpen, onHide, title, data = {} }) => {
   const [imageData, setImageData] = useState(image);
   const [imageFile, setImageFile] = useState(null);
   const [isIconModal, setIsIconModal] = useState(false);
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isOpen });
 
   const awsHandler = async (file, dirName = "category") => {
     const formData = new FormData();
@@ -137,7 +136,7 @@ const Category = ({ isOpen, onHide, title, data = {} }) => {
       setImageData(image);
       validation.setFieldValue("icon", image);
     }
-  }, [data]);
+  }, [data, image, isEdit, validation]);
 
   return (
     <>

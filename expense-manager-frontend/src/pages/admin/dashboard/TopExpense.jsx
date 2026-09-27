@@ -74,7 +74,8 @@ const TopExpense = ({ data = [], enumTitle = "" }) => {
             const icon = item?.category?.icon;
             const title = item?.category?.title;
             const creditDebit = item?.creditDebit;
-            const date = new Date(item?.date);
+            const rawDate = item?.date ? new Date(item.date) : new Date();
+            const date = isNaN(rawDate.getTime()) ? new Date() : rawDate;
             const amount = item?.amount;
             const currencySymbol = item?.currency?.symbol;
             const type = item?.type;
@@ -89,12 +90,7 @@ const TopExpense = ({ data = [], enumTitle = "" }) => {
             const note = item?.note;
             const payee = item?.payee?.name || "";
             const labels = item?.labels;
-            const toAccountTitle = item?.to?.title;
             const toAccount = item?.to?.title || "";
-            const accountTitle =
-              creditDebit == creditDebitEnum.DEBIT
-                ? toAccountTitle
-                : item?.account?.title;
 
             const formattedDate = isToday(date)
               ? "Today"
@@ -219,7 +215,7 @@ const TopExpense = ({ data = [], enumTitle = "" }) => {
                         creditDebit == creditDebitEnum.DEBIT
                       ? "- "
                       : ""}
-                    {currencySymbol + formateAmount({ price: amount })}
+                    {(currencySymbol || "") + formateAmount({ price: amount })}
                   </span>
                   <span className="fs-12 text-color-silver-sand text-end text-nowrap ms-3">
                     {formattedDate} {formattedTime}

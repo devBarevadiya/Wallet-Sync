@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import SettingLayout from "../settings/Layout";
 import { useSelector } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -20,12 +19,10 @@ import { getAccountThunk } from "../../../store/actions";
 import {
   addAccount,
   groupAccessEnum,
-  subscriptionTypeEnum,
 } from "../../../helpers/enum";
 import GroupModal from "../settings/modals/GroupModal";
 import { ADMIN } from "../../../constants/routes";
 import ToggleMenu from "../../../components/admin/ToggleMenu";
-import useConfirmationAlert from "../../../components/admin/sweetAlerts/ConfirmationAlert";
 import DynamicLordIcon from "../../../components/DynamicLordIcon";
 import TableTitle from "../../../components/admin/pageTitle/TableTitle";
 import PageTitle from "../../../components/admin/pageTitle/PageTitle";
@@ -43,7 +40,7 @@ const GroupDetails = () => {
   const { singleData, singleLoading, actionLoading } = useSelector(
     (store) => store.Group
   );
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isOpen });
 
   const { data } = useSelector((store) => store.Account);
   const { user } = useSelector((store) => store.Auth);
@@ -129,30 +126,6 @@ const GroupDetails = () => {
         }
       }
     },
-  });
-
-  const triggerRemoveMember = useConfirmationAlert({
-    icon: "warning",
-    title: "Confirm Remove member",
-    text: "Are you sure you want to remove this member?",
-    confirmButtonText: "Remove Member",
-    cancelButtonText: "Not Now",
-    confirmButton: "sweet-alert-red-button",
-    cancelButton: "sweet-alert-green-button",
-
-    successText: "member removed successfully!",
-  });
-
-  const triggerDeleteGroup = useConfirmationAlert({
-    icon: "warning",
-    title: "Confirm Delete this Group",
-    text: "Are you sure you want to Delete this Group?",
-    confirmButtonText: "Delete Group",
-    cancelButtonText: "Not Now",
-    confirmButton: "sweet-alert-red-button",
-    cancelButton: "sweet-alert-green-button",
-
-    successText: "Group Deleted successfully!",
   });
 
   const handleOpenAlert = useCallback(() => {
@@ -256,7 +229,7 @@ const GroupDetails = () => {
     } else {
       setPremiumModel(true);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     (async () => {

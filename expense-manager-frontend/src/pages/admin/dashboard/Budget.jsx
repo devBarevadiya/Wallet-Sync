@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { memo, useCallback, useState } from "react";
 import ToggleMenu from "../../../components/admin/ToggleMenu";
-import DateFilterModal from "../../../components/admin/modals/DateFilterModal";
 import { useSelector } from "react-redux";
 import {
   capitalizeFirstLetter,
@@ -13,12 +12,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { ADMIN } from "../../../constants/routes";
 import { setChartOrderHide } from "../../../store/dashboard/slice";
 import { Image } from "../../../data/images";
-import { analyticsTypeEnum } from "../../../helpers/enum";
 
 const Budget = ({ data = [], enumTitle = "" }) => {
   const { baseCurrency } = useSelector((store) => store.Auth);
   const [isOpen, setIsOpen] = useState(false);
-  const [isModal, setIsModal] = useState(false);
   const nav = useNavigate();
   // const color = ["#6BC127", "#C75DE1", "#FFB800"];
   const currencySymbol = baseCurrency?.symbol;
@@ -65,12 +62,13 @@ const Budget = ({ data = [], enumTitle = "" }) => {
         {data?.length > 0 ? (
           <ul className="p-0 m-0">
             {data?.map((item, index) => {
-              const title = item?.name || 0;
-              const amount = item?.maxAmount || 0;
-              const spend = item?.spendAmount || 0;
-              const remain = item?.remainingAmount || 0;
+              const title = item?.name || "";
+              const amount = Number(item?.maxAmount) || 0;
+              const spend = Number(item?.spendAmount) || 0;
+              const remain = Number(item?.remainingAmount) || 0;
               const period = item?.period;
-              const usedPercent = Math.round((spend / amount) * 100) || 0;
+              const usedPercent = amount > 0 ? Math.round((spend / amount) * 100) : 0;
+              const symbolStr = currencySymbol || "";
               return (
                 <li
                   key={index}
@@ -126,7 +124,7 @@ const Budget = ({ data = [], enumTitle = "" }) => {
                           </span>
                         )}
                         <span className="client-section-bg-color px-3 border border-dark-white-color py-2 br-8 fs-14 fw-medium">
-                          {currencySymbol +
+                          {symbolStr +
                             formateAmount({
                               price: spend,
                             })}

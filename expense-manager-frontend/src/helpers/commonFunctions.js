@@ -13,12 +13,9 @@ import {
   endOfWeek,
   endOfYear,
   format,
-  isSameMonth,
-  isSameYear,
   isThisMonth,
   isThisWeek,
   isThisYear,
-  isToday,
   startOfMonth,
   startOfYear,
   subDays,
@@ -31,8 +28,13 @@ import { toastError } from "../config/toastConfig";
 import { userLogoutThunk } from "../store/actions";
 import { fetchRemoteConfig } from "../firebase/config";
 
+export const safeNumber = (value, fallback = 0) => {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+};
+
 export const currencyHandler = (price = 0, symbol = true) => {
-  const checkNumber = Number(price) || 0;
+  const checkNumber = safeNumber(price);
   if (symbol) {
     return currency + checkNumber.toLocaleString("en-IN");
   } else {
@@ -48,17 +50,27 @@ export const debouncedToastError = debounce(
   { leading: true, trailing: false }
 );
 
-export const logout = async () => {
-  const deviceToken = localStorage.getItem("deviceToken") || "";
-  if (deviceToken) {
-    await store.dispatch(userLogoutThunk({ deviceToken }));
-    // localStorage.removeItem("deviceToken");
+export const logout = async (callApi = true) => {
+  try {
+    const deviceToken = localStorage.getItem("deviceToken") || "";
+    if (deviceToken && callApi) {
+      await store.dispatch(userLogoutThunk({ deviceToken }));
+    }
+  } catch (e) {
+    console.log("Logout error:", e);
+  } finally {
+    store.dispatch({ type: "RESET_STORE" });
+    store.dispatch(clearToken());
+    ["token", "deviceToken", "fromAcc"].forEach((key) =>
+      localStorage.removeItem(key)
+    );
+    if (
+      window.location.pathname !== "/sign-in" &&
+      !window.location.pathname.startsWith("/sign-in")
+    ) {
+      window.location.href = "/sign-in";
+    }
   }
-  store.dispatch({ type: "RESET_STORE" });
-  store.dispatch(clearToken());
-  // localStorage.removeItem("token");
-  // localStorage.removeItem("chartOrder");
-  localStorage.clear();
 };
 
 export const clearLocalData = () => {
@@ -68,12 +80,16 @@ export const clearLocalData = () => {
   store.dispatch(setDefaultTimePeriod(timePeriods.THIS_MONTH));
 };
 
-export const formatDate = (date, format) => {
-  return moment(date).format(format);
+export const formatDate = (date, formatStr = "YYYY-MM-DD") => {
+  if (!date) return "-";
+  const m = moment(date);
+  return m.isValid() ? m.format(formatStr) : "-";
 };
 
-export const formatTime = (time, format) => {
-  return moment(time, "HH:mm:ss").format(format);
+export const formatTime = (time, formatStr = "hh:mm A") => {
+  if (!time) return "-";
+  const m = moment(time, ["HH:mm:ss", "HH:mm", "hh:mm A", moment.ISO_8601]);
+  return m.isValid() ? m.format(formatStr) : "-";
 };
 
 export const timeDifference = ({ fromDate = moment(), toDate = moment() }) => {
@@ -158,13 +174,14 @@ export const handleCloseBackdrop = () => {
   document.body.classList.remove("overflow-hidden");
 };
 
-export const formateAmount = ({ price = 0, currencyCode = "USD" }) => {
-  const formatter = Intl.NumberFormat("en", {
-    currency: currencyCode,
-    style: "currency",
-  });
-  // return formatter.format(price);
-  return Intl.NumberFormat().format(price);
+export const formateAmount = (input = 0) => {
+  let rawPrice = 0;
+  if (typeof input === "object" && input !== null) {
+    rawPrice = input.price !== undefined ? input.price : 0;
+  } else {
+    rawPrice = input;
+  }
+  return Intl.NumberFormat().format(safeNumber(rawPrice));
 };
 
 export const getDateDaysAgo = (daysAgo) => {
@@ -202,7 +219,6 @@ export const aggregateDates = (data) => {
   if (dataLength < 15) return data;
 
   let result = [];
-  let lastAddedDate = null; // Keep track of the last added date to avoid duplicates
   const lastDate = data[data?.length - 1]?.date;
 
   data.reduce((acc, curr) => {

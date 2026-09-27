@@ -4,6 +4,7 @@ import {
   aggregateDates,
   formatDate,
   formateAmount,
+  safeNumber,
 } from "../../../helpers/commonFunctions";
 import ToggleMenu from "../../../components/admin/ToggleMenu";
 import { memo, useMemo, useState } from "react";
@@ -21,7 +22,7 @@ const BalanceTrend = ({ data = [], enumTitle = "", isShowList = true }) => {
 
   const { seriesDate, dateData } = aggregateDates(data)?.reduce(
     (acc, value) => {
-      acc.seriesDate.push(value?.balance);
+      acc.seriesDate.push(safeNumber(value?.balance));
       acc.dateData.push(formatDate(value?.date, "D MMM"));
       return acc;
     },

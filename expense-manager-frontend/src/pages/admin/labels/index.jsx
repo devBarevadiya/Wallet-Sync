@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 // import SettingLayout from "./Layout";
-import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import ModelWrapper from "../../../components/ModelWrapper";
 import InputField from "../../../components/inputFields/InputField";
 import { useFormik } from "formik";
@@ -14,15 +14,11 @@ import {
 import { useDispatch } from "react-redux";
 import ColorSelectField from "../../../components/inputFields/ColorSelectField";
 import { useSelector } from "react-redux";
-import useConfirmationAlert from "../../../components/admin/sweetAlerts/ConfirmationAlert";
 import LabelsLoading from "./LabelsLoading";
-import DynamicLordIcon from "../../../components/DynamicLordIcon";
 import ToggleMenu from "../../../components/admin/ToggleMenu";
 import PageTitle from "../../../components/admin/pageTitle/PageTitle";
-import TableTitle from "../../../components/admin/pageTitle/TableTitle";
 import NoData from "../../../components/admin/NoData";
 import PremiumModal from "../../../components/admin/modals/PremiumModal";
-import { subscriptionTypeEnum } from "../../../helpers/enum";
 import CommonDeleteModal from "../../../components/admin/modals/deleteModals/CommonDeleteModal";
 import { isPremium } from "../../../helpers/commonFunctions";
 import { useModalScroll } from "../../../helpers/customHooks";
@@ -31,14 +27,13 @@ const Labels = () => {
   const { data, loading, actionLoading, accessLimit } = useSelector(
     (store) => store.Label
   );
-  const { user } = useSelector((store) => store.Auth);
   const [editId, setEditId] = useState("");
   const [isModal, setIsModal] = useState(false);
   const [premiumModel, setPremiumModel] = useState(false);
   const [openId, setOpenId] = useState("");
   const [isDelete, setIsDelete] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isModal });
   const colors = useMemo(
     () => [
       "#5ED3DB",
@@ -127,18 +122,6 @@ const Labels = () => {
     [validation]
   );
 
-  const triggerDeleteLabel = useConfirmationAlert({
-    icon: "warning",
-    title: "Confirm Label Delete",
-    text: "Are you sure you want to delete this Label? This change cannot be undone.",
-    confirmButtonText: "Delete Label",
-    cancelButtonText: "Not Now",
-    confirmButton: "sweet-alert-red-button",
-    cancelButton: "sweet-alert-green-button",
-
-    successText: "Label has been successfully deleted.",
-  });
-
   const handleDelete = useCallback((id) => {
     setDeleteId(id), setIsDelete(true);
   }, []);
@@ -164,13 +147,13 @@ const Labels = () => {
     } else {
       setPremiumModel(true);
     }
-  }, [accessLimit, data, user]);
+  }, [accessLimit, data]);
 
   useEffect(() => {
     if (!data?.length) {
       dispatch(getLabelThunk());
     }
-  }, []);
+  }, [data?.length, dispatch]);
 
   return (
     <>

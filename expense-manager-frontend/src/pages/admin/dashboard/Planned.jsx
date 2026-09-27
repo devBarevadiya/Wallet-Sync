@@ -2,14 +2,13 @@ import PropTypes from "prop-types";
 import {
   formateAmount,
 } from "../../../helpers/commonFunctions";
-import { analyticsTypeEnum, transactionTypeEnum } from "../../../helpers/enum";
+import { transactionTypeEnum } from "../../../helpers/enum";
 import { memo, useCallback, useState } from "react";
 import ToggleMenu from "../../../components/admin/ToggleMenu";
 import { setChartOrderHide } from "../../../store/dashboard/slice";
 import { Link } from "react-router-dom";
 import { ADMIN } from "../../../constants/routes";
 import { useDispatch } from "react-redux";
-import DateFilterModal from "../../../components/admin/modals/DateFilterModal";
 import { Image } from "../../../data/images";
 import EditPlannedModal from "../../../components/admin/modals/plannedPaymentModals/EditPlannedModal";
 import PlannedPaymentModal from "../../../components/admin/modals/plannedPaymentModals/PlannedPaymentModal";
@@ -21,7 +20,6 @@ const Planned = ({ data = [], enumTitle = "" }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isModal, setIsModal] = useState(false);
-  const [isDateModal, setIsDateModal] = useState(false);
   const [isEditModal, setIsEditModal] = useState(false);
   const [editData, setEditData] = useState({});
 
@@ -43,8 +41,9 @@ const Planned = ({ data = [], enumTitle = "" }) => {
   }, []);
 
   const handleEditData = useCallback((values) => {
-    setEditData(values), handleOpenEditModal();
-  }, []);
+    setEditData(values);
+    handleOpenEditModal();
+  }, [handleOpenEditModal]);
 
   const handleCloseEditModal = useCallback(() => {
     setIsEditModal(false);
@@ -56,7 +55,7 @@ const Planned = ({ data = [], enumTitle = "" }) => {
 
   const handleSubModalOpen = useCallback(() => {
     handleCloseModal();
-  }, []);
+  }, [handleCloseModal]);
 
   const handleOpenModal = useCallback(() => {
     setIsModal(true);
@@ -70,7 +69,7 @@ const Planned = ({ data = [], enumTitle = "" }) => {
   const handleConfirmPayment = useCallback(async () => {
     await dispatch(getAccountThunk());
     await dispatch(analyticsThunk(chartData));
-  }, [chartData]);
+  }, [chartData, dispatch]);
 
   return (
     <div className="responsive">
@@ -165,7 +164,7 @@ const Planned = ({ data = [], enumTitle = "" }) => {
                             ? "- "
                             : ""
                           : ""}
-                        {currencySymbol + formateAmount({ price: amount })}
+                        {(currencySymbol || "") + formateAmount({ price: amount })}
                       </span>
                       {nextPaymentDate ? (
                         <span className="fs-12 text-nowrap text-color-silver-sand text-capitalize d-block">

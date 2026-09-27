@@ -24,7 +24,7 @@ const Transactions = () => {
   const { baseCurrency } = useSelector((store) => store.Auth);
   const [toggle, setToggle] = useState(false);
   const [filterModal, setFilterModal] = useState(false);
-  const currencySymbol = baseCurrency?.symbol;
+  const currencySymbol = baseCurrency?.symbol || "";
   const transactions = transactionData?.transactions;
   const totalPages = transactionPagination?.totalPages;
   const page = transactionPagination?.page;
@@ -122,7 +122,7 @@ const Transactions = () => {
                           const amount = item?.amount;
                           const date = item?.date;
                           const categoryTitle = item?.category?.title;
-                          const currencySymbol = item?.currency?.symbol;
+                          const currencySymbol = item?.currency?.symbol || "";
                           const color = item?.category?.color;
 
                           return (

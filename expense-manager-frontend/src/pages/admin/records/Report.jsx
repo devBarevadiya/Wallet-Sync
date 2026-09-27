@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useMemo, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
@@ -19,7 +20,6 @@ import { IconsImage, Image } from "../../../data/images";
 
 const Report = ({ user = {}, filter = {} }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [logoLoaded, setLogoLoaded] = useState(false); // Track if logo is loaded
 
   const { reportData, reportLoading: loading } = useSelector(
     (store) => store.Transaction
@@ -29,10 +29,6 @@ const Report = ({ user = {}, filter = {} }) => {
   const dispatch = useDispatch();
 
   const pdfRef = useRef();
-
-  const handleLogoLoad = () => {
-    setLogoLoaded(true); // Set logo loaded when the image finishes loading
-  };
 
   const downloadPDF = async () => {
     setIsLoading(true);
@@ -44,7 +40,6 @@ const Report = ({ user = {}, filter = {} }) => {
         if (!pdfRef.current) return;
 
         const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
         let yOffset = 10; // Initial Y position
 
@@ -155,19 +150,13 @@ const Report = ({ user = {}, filter = {} }) => {
             src={Image.blackLogo}
             className="mx-2 mb-3 h-50px"
             alt="Logo"
-            onLoad={handleLogoLoad} // Ensure the logo is loaded
           />
 
           <Table className="mb-0 w-100 border">
             <tbody>
               {flatData?.map((item, index1) => {
                 const title = item?.category?.title;
-                const toAccountTitle = item?.to?.title;
                 const creditDebit = item?.creditDebit;
-                const accountTitle =
-                  creditDebit == creditDebitEnum.DEBIT
-                    ? toAccountTitle
-                    : item?.account?.title;
                 const amount = item?.amount;
                 const type = item?.type;
                 const icon =
@@ -181,7 +170,8 @@ const Report = ({ user = {}, filter = {} }) => {
                 const note = item?.note;
                 const payee = item?.payee?.name || "";
                 const labels = item?.labels;
-                const date = new Date(item?.date);
+                const rawDate = item?.date ? new Date(item.date) : new Date();
+                const date = isNaN(rawDate.getTime()) ? new Date() : rawDate;
                 const createdByUser =
                   (item?.user?._id !== user?._id && item?.user?.username) || "";
                 const formattedDate = isToday(date)
@@ -295,7 +285,7 @@ const Report = ({ user = {}, filter = {} }) => {
                                 creditDebit == creditDebitEnum.DEBIT
                               ? "- "
                               : ""}
-                            {currencySymbol + formateAmount({ price: amount })}
+                            {(currencySymbol || "") + formateAmount({ price: amount })}
                           </span>
                           <span className="fs-12 text-color-monsoon text-end mt-1">
                             {formattedDate} {formattedTime}
@@ -334,3 +324,8 @@ const Report = ({ user = {}, filter = {} }) => {
 };
 
 export default Report;
+
+Report.propTypes = {
+  user: PropTypes.object,
+  filter: PropTypes.object,
+};

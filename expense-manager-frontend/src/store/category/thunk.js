@@ -21,7 +21,7 @@ export const getCategoryThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -43,7 +43,7 @@ export const createCategoryThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -66,7 +66,7 @@ export const updateCategoryThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -87,7 +87,7 @@ export const createHeadThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }
@@ -109,7 +109,7 @@ export const updateHeadThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

@@ -19,7 +19,7 @@ export const setDocThunk = createAsyncThunk(
       }
       // Reject with error response
       return rejectWithValue({
-        status: error.response.status,
+        status: error?.response?.status || 500,
         message: errorMessage,
       });
     }

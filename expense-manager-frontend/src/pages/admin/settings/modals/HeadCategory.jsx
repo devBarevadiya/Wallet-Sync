@@ -112,18 +112,6 @@ const HeadCategory = ({ isOpen, onHide, title, data = {} }) => {
     },
   });
 
-  const handleFilePreview = (input) => {
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      validation.setFieldValue("icon", file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImageData(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleCloseModal = () => {
     setIsIconModal(false);
     validation.resetForm();
@@ -141,9 +129,9 @@ const HeadCategory = ({ isOpen, onHide, title, data = {} }) => {
       setImageData(image);
       validation.setFieldValue("icon", image);
     }
-  }, [data]);
+  }, [data, image, isEdit, validation]);
 
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isOpen });
 
   return (
     <>

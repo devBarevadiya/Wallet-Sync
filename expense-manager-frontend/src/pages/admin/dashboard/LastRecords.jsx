@@ -22,7 +22,6 @@ import { setStateEditData } from "../../../store/transaction/slice";
 
 const LastRecords = ({ data, enumTitle = "", onNoAccount }) => {
   const [recordModel, setRecordModel] = useState(false);
-  const [isEditRecord, setIsEditRecord] = useState({});
   const { chartData } = useSelector((store) => store.Dashboard);
   const { data: acountData } = useSelector((store) => store.Account);
   const { user } = useSelector((store) => store.Auth);
@@ -36,7 +35,7 @@ const LastRecords = ({ data, enumTitle = "", onNoAccount }) => {
   };
 
   const handleCloseCategoryModal = useCallback(() => {
-    setRecordModel(false), setIsEditRecord({});
+    setRecordModel(false);
   }, []);
 
   const handleOpenDirect = useCallback(() => {
@@ -110,11 +109,11 @@ const LastRecords = ({ data, enumTitle = "", onNoAccount }) => {
             const icon = item?.category?.icon;
             const creditDebit = item?.creditDebit;
             const title = item?.category?.title;
-            const date = new Date(item?.date);
+            const rawDate = item?.date ? new Date(item.date) : new Date();
+            const date = isNaN(rawDate.getTime()) ? new Date() : rawDate;
             const amount = item?.amount;
             const currencySymbol = item?.currency?.symbol;
             const type = item?.type;
-            const toAccountTitle = item?.to?.title;
             const toAccount = item?.to?.title || "";
             const createdByUser =
               (item?.user?._id !== user?._id && item?.user?.username) || "";
@@ -127,10 +126,6 @@ const LastRecords = ({ data, enumTitle = "", onNoAccount }) => {
             const note = item?.note;
             const payee = item?.payee?.name || "";
             const labels = item?.labels;
-            const accountTitle =
-              creditDebit == creditDebitEnum.DEBIT
-                ? toAccountTitle
-                : item?.account?.title;
 
             const formattedDate = isToday(date)
               ? "Today"
@@ -150,7 +145,6 @@ const LastRecords = ({ data, enumTitle = "", onNoAccount }) => {
                 } d-flex align-items-cente justify-content-between cursor-pointer`}
                 onClick={() => {
                   setRecordModel(true),
-                    setIsEditRecord(item),
                     dispatch(setStateEditData(item));
                 }}
               >
@@ -258,7 +252,7 @@ const LastRecords = ({ data, enumTitle = "", onNoAccount }) => {
                         creditDebit == creditDebitEnum.DEBIT
                       ? "- "
                       : ""}
-                    {currencySymbol + formateAmount({ price: amount })}
+                    {(currencySymbol || "") + formateAmount({ price: amount })}
                   </span>
                   <span className="fs-12 text-color-silver-sand text-end text-nowrap ms-3">
                     {formattedDate} {formattedTime}

@@ -17,7 +17,7 @@ const DeleteRecordModal = ({
 }) => {
   const { user } = useSelector((store) => store.Auth);
   const { loading } = useSelector((store) => store.Transaction);
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isOpen });
 
   const handleConfirm = useCallback(() => {
     onConfirm();
@@ -49,14 +49,10 @@ const DeleteRecordModal = ({
             const icon = item?.category?.icon;
             const title = item?.category?.title;
             const creditDebit = item?.creditDebit;
-            const toAccountTitle = item?.to?.title;
-            const accountTitle =
-              creditDebit == creditDebitEnum.DEBIT
-                ? toAccountTitle
-                : item?.account?.title;
-            const date = item?.date ? new Date(item?.date) : new Date();
+            const rawDate = item?.date ? new Date(item?.date) : new Date();
+            const date = isNaN(rawDate.getTime()) ? new Date() : rawDate;
             const amount = item?.amount;
-            const currencySymbol = item?.currency?.symbol;
+            const currencySymbol = item?.currency?.symbol || "";
             const type = item?.type;
             const toAccount = item?.to?.title || "";
             const createdByUser =

@@ -12,7 +12,7 @@ const Success = () => {
 
   useEffect(() => {
     if (params.token && params.token !== previousToken.current) {
-      dispatch(verifyTokenThunk());
+      dispatch(verifyTokenThunk({ token }));
       previousToken.current = params.token;
     }
   }, [dispatch, token, params]);

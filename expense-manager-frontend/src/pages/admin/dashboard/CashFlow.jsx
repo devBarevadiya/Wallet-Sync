@@ -15,14 +15,11 @@ const CashFlow = ({ data, enumTitle = "" }) => {
   const [isModal, setIsModal] = useState(false);
 
   const dispatch = useDispatch();
-  const balance = data?.balance || 0;
-  const total = data?.income + data?.expense || 0;
-  const income = data?.income;
-  const incomeInPercent = Math.round(income > 0 ? (income / total) * 100 : 0);
-  const expense = data?.expense;
-  const expenseInPercent = Math.round(
-    expense > 0 ? (expense / total) * 100 : 0
-  );
+  const income = Number(data?.income) || 0;
+  const expense = Number(data?.expense) || 0;
+  const total = income + expense;
+  const incomeInPercent = total > 0 ? Math.round((income / total) * 100) : 0;
+  const expenseInPercent = total > 0 ? Math.round((expense / total) * 100) : 0;
   const priceDifference = income - expense;
 
   const incomeOptions = {

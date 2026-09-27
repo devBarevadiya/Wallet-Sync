@@ -88,7 +88,7 @@ const GroupModal = ({ isOpen, onHide, data = {}, id }) => {
     }
   };
 
-  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: open });
+  const modalBodyRef = useModalScroll({ scrollStep: 60, enabled: isOpen });
 
   return (
     <ModelWrapper

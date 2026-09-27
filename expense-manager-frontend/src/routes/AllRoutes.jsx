@@ -1,12 +1,11 @@
 import { useSelector } from "react-redux";
 import { AuthRoutes as Auth } from "./AuthRoutes";
 import { AdminRoutes as Admin } from "./AdminRoutes";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import AdminLayout from "../pages/admin/Layout";
 import {
   ADMIN,
   AUTH,
-  CLIENT,
   ON_BOARDING,
   OTHER_AUTH,
 } from "../constants/routes";
@@ -17,7 +16,6 @@ import { APP_ROUTE } from "../helpers/enum";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import Success from "../pages/stripe/Success";
 // import Reject from "../pages/stripe/Reject";
-import OnBoarding from "./OnBoarding";
 import Layout from "../pages/onBoarding/Layout";
 import ResetPassword from "../pages/auth/ResetPassword";
 import Currency from "../pages/onBoarding/Currency";
@@ -26,6 +24,7 @@ import SignUp from "../pages/auth/SignUp";
 const AllRoutes = () => {
   const { token, user } = useSelector((store) => store.Auth);
   const { isSubscriptionScreen } = useSelector((store) => store.Filters);
+  const location = useLocation();
   const PARAMS_TOKEN = "/:token";
   const currency = user?.currencies;
   const AuthRoutes = Auth();

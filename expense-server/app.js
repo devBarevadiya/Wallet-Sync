@@ -4,8 +4,7 @@ import session from "express-session";
 import morgan from "morgan";
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import { join } from "path";
-import { DATABASE_URL, PORT, SECRET_KEY } from "./config/env.js";
+import { DATABASE_URL, PORT, SECRET_KEY, ORIGIN_URL } from "./config/env.js";
 import UserModel from "./features/user/model.js";
 import { connectDb } from "./helper/connectDb.js";
 import * as route from "./router.js";
@@ -48,19 +47,27 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 
-// Handle Client Server
-// const corsOptions = {
-//   origin: ORIGIN_URL.split(",").map((url) => url.trim()),
-//   optionsSuccessStatus: 200,
-// };
+const allowedOrigins = [
+  "http://localhost:8600",
+  "http://localhost:5175",
+  "https://walletsync-web.vercel.app",
+  "https://walletsync-app.vercel.app",
+  ...(ORIGIN_URL ? ORIGIN_URL.split(",").map((url) => url.trim()) : []),
+];
 
 const corsOptions = {
-  origin: [
-    "http://localhost:8600",
-    "http://localhost:5175",
-    "https://walletsync-web.vercel.app",
-    "https://walletsync-app.vercel.app",
-  ],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith(".vercel.app")
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));

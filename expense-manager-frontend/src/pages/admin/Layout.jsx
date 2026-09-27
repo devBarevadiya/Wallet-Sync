@@ -35,6 +35,7 @@ const AdminLayout = ({ children }) => {
   const location = useLocation();
   const deviceToken = localStorage.getItem("deviceToken") || "";
   const refreshInFlight = useRef(false);
+  const sessionCheckInFlight = useRef(null);
   const chartDataRef = useRef(chartData);
   const hasGroupsRef = useRef(Boolean(groupData?.length));
 
@@ -155,11 +156,22 @@ const AdminLayout = ({ children }) => {
 
   useEffect(() => {
     const tokenHandler = async () => {
-      if (refreshInFlight.current) return;
-      const currentToken = localStorage.getItem("token") || token;
-      if (currentToken) {
-        const response = await dispatch(verifyTokenThunk({ token: currentToken }));
+      if (sessionCheckInFlight.current) return sessionCheckInFlight.current;
+
+      sessionCheckInFlight.current = (async () => {
+        const currentToken = localStorage.getItem("token") || token;
+        if (!currentToken) {
+          logout(false);
+          return;
+        }
+
+        const response = await dispatch(
+          verifyTokenThunk({ token: currentToken })
+        );
         if (verifyTokenThunk.fulfilled.match(response)) {
+          if (localStorage.getItem("token") !== currentToken) return;
+
+          if (refreshInFlight.current) return;
           refreshInFlight.current = true;
           try {
             const refreshRequests = [
@@ -179,9 +191,11 @@ const AdminLayout = ({ children }) => {
             logout(false);
           }
         }
-      } else {
-        logout(false);
-      }
+      })().finally(() => {
+        sessionCheckInFlight.current = null;
+      });
+
+      return sessionCheckInFlight.current;
     };
     tokenHandler();
 

@@ -123,6 +123,7 @@ const initialState = {
   singleChartLoading: false,
   singleChartMessage: "",
   singleChartError: null,
+  requestIds: {},
 };
 
 const slice = createSlice({
@@ -210,50 +211,62 @@ const slice = createSlice({
   extraReducers: (builder) => {
     // last record
 
-    builder.addCase(lastRecordThunk.pending, (state) => {
+    builder.addCase(lastRecordThunk.pending, (state, action) => {
       state.loading = true;
       state.message = "";
       state.error = null;
+      state.requestIds.lastRecord = action.meta.requestId;
     });
     builder.addCase(lastRecordThunk.fulfilled, (state, action) => {
+      if (state.requestIds.lastRecord !== action.meta.requestId) return;
       state.loading = false;
       state.message = "";
       state.error = null;
-      state.lastRecord = action.payload.data;
+      state.lastRecord = Array.isArray(action.payload?.data)
+        ? action.payload.data
+        : [];
     });
     builder.addCase(lastRecordThunk.rejected, (state, action) => {
+      if (state.requestIds.lastRecord !== action.meta.requestId) return;
       state.loading = false;
-      state.error = action.payload.message;
+      state.error = action.payload?.message || action.error?.message || "Unable to load records.";
       state.message = "";
     });
 
     // spending
 
-    builder.addCase(spendingThunk.pending, (state) => {
+    builder.addCase(spendingThunk.pending, (state, action) => {
       state.loading = true;
       state.message = "";
       state.error = null;
+      state.requestIds.spending = action.meta.requestId;
     });
     builder.addCase(spendingThunk.fulfilled, (state, action) => {
+      if (state.requestIds.spending !== action.meta.requestId) return;
       state.loading = false;
       state.message = "";
       state.error = null;
-      state.spending = action.payload.data;
+      state.spending = Array.isArray(action.payload?.data)
+        ? action.payload.data
+        : [];
     });
     builder.addCase(spendingThunk.rejected, (state, action) => {
+      if (state.requestIds.spending !== action.meta.requestId) return;
       state.loading = false;
-      state.error = action.payload.message;
+      state.error = action.payload?.message || action.error?.message || "Unable to load spending data.";
       state.message = "";
     });
 
     // analysts
 
-    builder.addCase(analyticsThunk.pending, (state) => {
+    builder.addCase(analyticsThunk.pending, (state, action) => {
       state.loading = true;
       state.message = "";
       state.error = null;
+      state.requestIds.analytics = action.meta.requestId;
     });
     builder.addCase(analyticsThunk.fulfilled, (state, action) => {
+      if (state.requestIds.analytics !== action.meta.requestId) return;
       state.loading = false;
       state.message = "";
       state.error = null;
@@ -263,8 +276,9 @@ const slice = createSlice({
           : {};
     });
     builder.addCase(analyticsThunk.rejected, (state, action) => {
+      if (state.requestIds.analytics !== action.meta.requestId) return;
       state.loading = false;
-      state.error = action.payload.message;
+      state.error = action.payload?.message || action.error?.message || "Unable to load analytics.";
       state.message = "";
     });
 
@@ -292,7 +306,10 @@ const slice = createSlice({
     });
     builder.addCase(singleAnalyticsThunk.rejected, (state, action) => {
       state.singleChartLoading = false;
-      state.singleChartError = action.payload.message;
+      state.singleChartError =
+        action.payload?.message ||
+        action.error?.message ||
+        "Unable to load this chart.";
       state.singleChartMessage = "";
     });
   },

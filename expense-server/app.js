@@ -1,33 +1,33 @@
-import express from "express";
-import { DATABASE_URL, ORIGIN_URL, PORT, SECRET_KEY } from "./config/env.js";
-import morgan from "morgan";
 import cors from "cors";
-import { connectDb } from "./helper/connectDb.js";
-import * as route from "./router.js";
+import express from "express";
 import session from "express-session";
+import morgan from "morgan";
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import UserModel from "./features/user/model.js";
 import { join } from "path";
+import { DATABASE_URL, PORT, SECRET_KEY } from "./config/env.js";
+import UserModel from "./features/user/model.js";
+import { connectDb } from "./helper/connectDb.js";
+import * as route from "./router.js";
 
 // import cronjobs
-import "./features/cron/schedulePayment.js";
-import "./features/notification/firebase.js";
-import "./features/cron/paymentReminder.js";
-import "./features/cron/inactivityReminder.js";
-import "./features/cron/summaryReport.js";
 import "./features/cron/balanceHistory.js";
 import "./features/cron/budget.js";
+import "./features/cron/inactivityReminder.js";
+import "./features/cron/paymentReminder.js";
 import "./features/cron/promoCode.js";
+import "./features/cron/schedulePayment.js";
+import "./features/cron/summaryReport.js";
+import "./features/notification/firebase.js";
 
 // events
+import "./features/balanceHistory/event.js";
 import "./features/budget/event.js";
 import "./features/category/event.js";
-import "./features/balanceHistory/event.js";
 import "./features/notification/email.js";
 
-import { agenda } from "./config/agenda.js";
 import moment from "moment";
+import { agenda } from "./config/agenda.js";
 import {
   allowedNotificationsEnum,
   summaryReportFrequency,
@@ -113,9 +113,31 @@ app.use(BASE_URL + "/webhook", route.webhookRoute);
 app.use("/uploads", express.static(join(process.cwd(), "pages")));
 
 // Start listing server
-app.listen(9000, "0.0.0.0", async () => {
+const listen = (port) =>
+  new Promise((resolve, reject) => {
+    const server = app.listen(port, "0.0.0.0");
+    server.on("listening", () => resolve(server));
+    server.on("error", (err) => reject(err));
+  });
+
+const startServer = async () => {
   await connectDb(DATABASE_URL);
-  console.log(`start listening on port http://localhost:${PORT}`);
+
+  const basePort = Number(PORT) || 9000;
+
+  let server;
+  try {
+    server = await listen(basePort);
+  } catch (err) {
+    if (err.code === "EADDRINUSE") {
+      throw new Error(
+        `Port ${basePort} is already in use. Please stop the process using this port or set PORT to a free port.`
+      );
+    }
+    throw err;
+  }
+
+  console.log(`start listening on port http://localhost:${server.address().port}`);
 
   await agenda.start();
 
@@ -163,6 +185,11 @@ app.listen(9000, "0.0.0.0", async () => {
   await agenda.every("55 23 31 12 *", allowedNotificationsEnum.SUMMARY_REPORT, {
     summaryReportCycle: summaryReportFrequency.YEARLY,
   });
+};
+
+startServer().catch((error) => {
+  console.error("Failed to start server:", error.message || error);
+  process.exit(1);
 });
 
 // Uncaught exceptions and unhandled rejections

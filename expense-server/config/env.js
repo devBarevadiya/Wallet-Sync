@@ -1,15 +1,29 @@
+import dns from "node:dns";
 import dotenv from "dotenv";
+import { existsSync } from "fs";
+import { resolve } from "path";
 
-export const NODE_ENV = process.env.NODE_ENV;
+// Fix Node.js c-ares DNS SRV query refusal on Windows/ISP DNS
+try {
+  dns.setServers(["8.8.8.8", "8.8.4.4"]);
+} catch (_) {}
 
-console.log({ NODE_ENV });
+export const NODE_ENV = process.env.NODE_ENV || "development";
 
-if (NODE_ENV === "development") {
-  dotenv.config({ path: ".env.dev" });
-} else if (NODE_ENV === "production") {
-  dotenv.config({ path: ".env" });
+const envFile = NODE_ENV === "development" ? ".env.dev" : ".env";
+const envPath = resolve(process.cwd(), envFile);
+const defaultEnvPath = resolve(process.cwd(), ".env");
+
+if (existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+  console.log(`[env] Loaded ${envFile}`);
+} else if (existsSync(defaultEnvPath)) {
+  dotenv.config({ path: defaultEnvPath });
+  console.warn(`[env] ${envFile} not found, loaded .env instead`);
 } else {
-  process.exit();
+  console.warn(
+    `[env] No environment file found for NODE_ENV=${NODE_ENV}. Using process environment variables only.`
+  );
 }
 
 export const {

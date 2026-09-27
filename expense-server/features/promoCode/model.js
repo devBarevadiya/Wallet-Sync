@@ -18,7 +18,6 @@ const mongooseSchema = mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 
-mongooseSchema.index({ code: 1 });
 mongooseSchema.index({ user: 1 });
 
 const PromoCodeModel = mongoose.model("PromoCode", mongooseSchema);

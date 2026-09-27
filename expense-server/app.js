@@ -33,6 +33,7 @@ import "./features/category/event.js";
 import "./features/notification/email.js";
 
 import moment from "moment";
+import mongoose from "mongoose";
 import { agenda } from "./config/agenda.js";
 import {
   allowedNotificationsEnum,
@@ -107,7 +108,14 @@ const BASE_URL = "/api";
 
 // Health check endpoint for Render / keep-alive pings
 app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "ok", message: "Server is healthy", timestamp: new Date() });
+  const databaseReady = mongoose.connection.readyState === 1;
+  res.status(databaseReady ? 200 : 503).json({
+    status: databaseReady ? "ok" : "starting",
+    message: databaseReady
+      ? "Server is healthy"
+      : "Server is waiting for the database connection",
+    timestamp: new Date(),
+  });
 });
 
 app.get("/", (req, res) => {
@@ -151,8 +159,6 @@ const listen = (port) =>
   });
 
 const startServer = async () => {
-  await connectDb(DATABASE_URL);
-
   const basePort = Number(PORT) || 9000;
 
   let server;
@@ -169,7 +175,9 @@ const startServer = async () => {
 
   console.log(`start listening on port http://localhost:${server.address().port}`);
 
-  await agenda.start();
+  try {
+    await connectDb(DATABASE_URL);
+    await agenda.start();
 
   const oldJobs = await agenda.jobs({ nextRunAt: { $lt: moment().toDate() } });
 
@@ -212,9 +220,13 @@ const startServer = async () => {
     }
   );
 
-  await agenda.every("55 23 31 12 *", allowedNotificationsEnum.SUMMARY_REPORT, {
-    summaryReportCycle: summaryReportFrequency.YEARLY,
-  });
+    await agenda.every("55 23 31 12 *", allowedNotificationsEnum.SUMMARY_REPORT, {
+      summaryReportCycle: summaryReportFrequency.YEARLY,
+    });
+  } catch (error) {
+    await new Promise((resolve) => server.close(resolve));
+    throw error;
+  }
 };
 
 startServer().catch((error) => {
@@ -225,7 +237,9 @@ startServer().catch((error) => {
 // Uncaught exceptions and unhandled rejections
 process.on("uncaughtException", function (err) {
   console.error("Uncaught Exception:", err);
+  process.exit(1);
 });
 process.on("unhandledRejection", function (err) {
   console.error("Unhandled Rejection:", err);
+  process.exit(1);
 });

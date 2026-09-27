@@ -172,7 +172,8 @@ export const firebaseRegisterAdminThunk = createAsyncThunk(
 
 export const verifyTokenThunk = createAsyncThunk(
   "verifyTokenThunk",
-  async ({ token } = {}, { rejectWithValue }) => {
+  async (payload = {}, { rejectWithValue }) => {
+    const token = payload?.token;
     try {
       const { data } = await backendHelper.verifyToken({ token });
       return data;

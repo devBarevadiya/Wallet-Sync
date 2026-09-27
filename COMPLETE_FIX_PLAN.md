@@ -267,7 +267,103 @@ Test at minimum:
 | Browser refresh | User and graphs load correctly |
 | Repeated focus events | No duplicate request storm |
 
-## 13. Quality Gate Before Production
+## 13. Expanded Edge-Case Checklist
+
+### Browser and tab lifecycle
+
+- Leave the authenticated tab inactive for 6–12 hours or overnight.
+- Put the laptop to sleep and wake it while the tab is open.
+- Restore the browser after it has discarded or restored an old tab.
+- Test offline → online and online → offline transitions.
+- Confirm `visibilitychange` and `focus` refreshes are safe when fired repeatedly or in quick succession.
+
+### API race conditions
+
+- Make several API requests fail or return `401` at the same time and confirm only one session transition occurs.
+- Refresh the token while multiple requests are pending.
+- Return an older API response after a newer response and confirm the older response cannot overwrite current data.
+- Confirm duplicate focus/visibility events do not create duplicate API calls.
+- Verify request cancellation, timeout handling, and cleanup when a page is left or unmounted.
+
+### React lifecycle and resource cleanup
+
+- Audit every changed `useEffect` dependency list for stale closures and unintended reruns.
+- Unmount pages while requests, timers, debounced callbacks, or notifications are active.
+- Confirm no state update occurs after unmount.
+- Confirm timers, event listeners, service-worker listeners, Firebase listeners, and subscriptions are removed.
+- Repeat navigation and tab activation enough times to detect growing request/listener counts or memory leaks.
+
+### Data and calculations
+
+Test every relevant field with `null`, `undefined`, `""`, `0`, numeric strings, invalid strings, `NaN`, and `Infinity`.
+
+- Confirm division-by-zero and invalid percentages have defined output.
+- Confirm invalid dates do not crash formatting, sorting, filtering, or chart labels.
+- Confirm empty, partial, malformed, and unexpected API payloads render safe states.
+- Confirm zero remains zero and is not treated as missing data.
+
+### Dashboard and graphs
+
+- Empty dataset.
+- All values equal to zero.
+- Exactly one data point.
+- Invalid or partially invalid chart data.
+- One failed widget API while other widgets succeed.
+- Loading, empty, error, retry, and refreshed states.
+- Graph recovery after token expiry, sleep/wake, Render cold start, and network restoration.
+
+No widget failure may blank or crash the entire dashboard. All chart inputs must be finite and intentional.
+
+### Cache and data isolation
+
+- Serve stale Redis data and confirm the UI does not treat it as a current-user response without validation.
+- Verify cache keys include the correct user/group/account scope.
+- Confirm User A can never receive User B’s cached profile, accounts, analytics, or graphs.
+- Check browser, CDN, and API cache headers so an old authenticated response cannot be reused for another user.
+
+### Multi-tab and user switching
+
+- Logout in another tab.
+- Login as another user in another tab.
+- Refresh or rotate a token in another tab.
+- Switch users without closing the browser.
+- Confirm the old Redux state, profile, groups, accounts, and graphs are cleared or replaced before the new user is shown.
+
+### Deployment compatibility
+
+- Old frontend tab against the new backend.
+- New frontend against the old backend during rollout/rollback.
+- Vercel and Render environment-variable presence and values.
+- Production CORS and preflight requests.
+- API route/version compatibility between frontend and backend.
+
+### Backend resilience
+
+- Render cold start.
+- Database connection drop and reconnect.
+- Redis unavailable or timing out.
+- Database/query timeout.
+- Backend restart while requests are in flight.
+- Unhandled promise rejection and malformed backend response paths.
+
+## 14. Critical End-to-End Scenario
+
+Run this scenario in a production-like environment with browser DevTools and network logs enabled:
+
+1. Log in as User A.
+2. Leave the tab open for 6–12 hours, or simulate the elapsed time and token expiry.
+3. Let the token expire.
+4. Make the backend temporarily unavailable, including a Render cold start or timeout.
+5. Restore network/backend availability.
+6. Return to the tab and trigger focus/visibility recovery.
+7. Confirm APIs refresh without duplicate storms or stale responses overwriting newer data.
+8. Confirm the dashboard loads, graphs calculate, and no `NaN`, `Infinity`, fake email, blank page, or endless loader appears.
+9. Log out, then log in as User B.
+10. Confirm only User B’s profile, accounts, analytics, and graphs are shown.
+
+This scenario is a release blocker until it passes cleanly.
+
+## 15. Quality Gate Before Production
 
 Do not deploy until all of the following pass:
 
@@ -283,6 +379,8 @@ Do not deploy until all of the following pass:
 - Render cold-start recovery works.
 - Browser-console errors are resolved.
 - Production-like Vercel-to-Render testing succeeds.
+- The complete expanded edge-case checklist above passes, or every exception is documented and explicitly accepted.
+- The critical end-to-end scenario above passes from a clean browser session.
 
 ## Recommended Implementation Order
 

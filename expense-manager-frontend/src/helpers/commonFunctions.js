@@ -320,7 +320,7 @@ export const isShowPromoCode = async () => {
   return await fetchRemoteConfig();
 };
 
-let cachedDataString = "";
+let cachedDataKey = "";
 let cachedCount = 0;
 
 export const countCustomCategory = () => {
@@ -329,8 +329,9 @@ export const countCustomCategory = () => {
   const userID = user?._id;
 
   const currentDataString = JSON.stringify(data);
+  const currentCacheKey = `${userID || "anonymous"}:${currentDataString}`;
 
-  if (cachedDataString === currentDataString) {
+  if (cachedDataKey === currentCacheKey) {
     return cachedCount;
   }
 
@@ -342,7 +343,7 @@ export const countCustomCategory = () => {
     return acc + categoryCount + subCategoryCount;
   }, 0);
 
-  cachedDataString = currentDataString;
+  cachedDataKey = currentCacheKey;
   cachedCount = count;
 
   return count;
